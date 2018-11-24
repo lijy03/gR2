@@ -1,0 +1,19 @@
+Package: gR2
+Type: Package
+Title: Generalized R Square Measures for a Mixture of Bivariate Linear Dependences
+Version: 0.1.0
+Authors@R: person("Jingyi Jessica", "Li", email = "jli@stat.ucla.edu",
+                  role = c("aut", "cre"))
+Maintainer: Jingyi Jessica Li <jli@stat.ucla.edu>
+Description: This R package contains functions to compute the supervised and unsupervised 
+    sample generalized R square measures. It also includes the K-lines clustering algorithm 
+    and a function to choose K for the unsupervised case. Functions for statistical inference 
+    of the supervised and unsupervised population generalied R square measures are also provided.
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+Imports:
+    lmodel2,
+    mvtnorm,
+    parallel
+RoxygenNote: 6.1.1
