@@ -22,6 +22,8 @@ This is a basic example which shows you how to solve a common problem:
 
 ``` r
 # generate data from a bivariate normal mixture model
+library(mvtnorm)
+library(parallel)
 K = 2 # number of components (lines)
 p_s = c(0.5, 0.5) # proportions of components
 mu_s = list(c(0,-2), c(0,2)) # mean vectors
@@ -46,59 +48,36 @@ plot(x, y)
 # supervised sample generalized R square
 gR2(x, y, z) # without inference
 #> $estimate
-#> [1] 0.6797322
+#> [1] 0.6389837
 gR2(x, y, z, inference=TRUE) # with inference
 #> $estimate
-#> [1] 0.6797322
+#> [1] 0.6389837
 #> 
 #> $conf.level
 #> [1] 0.95
 #> 
 #> $conf.int
-#> [1] 0.6115479 0.7479164
+#> [1] 0.5647868 0.7131806
 #> 
 #> $p.val
-#> [1] 2.559628e-85
+#> [1] 3.199748e-64
 
 # unsupervised sample generalized R square
-gR2(x, y, K=2) # with K specified, without inference
+gR2(x, y, K=2, mc.cores=2) # with K specified, without inference
 #> $estimate
-#> [1] 0.6797322
+#> [1] 0.6389837
 #> 
 #> $K
 #> [1] 2
 #> 
 #> $membership
-#>   [1] 2 1 2 1 2 1 1 2 1 2 2 1 2 2 1 2 1 2 1 2 2 1 2 2 1 1 2 1 1 2 2 2 1 1 2
-#>  [36] 2 1 2 1 2 1 1 2 2 1 1 1 1 2 2 1 2 1 2 1 2 2 2 2 2 1 2 2 1 1 1 1 2 1 2
-#>  [71] 2 1 1 1 2 2 1 2 1 2 2 1 2 1 2 1 1 1 2 1 1 2 1 1 1 1 1 2 1 1 2 1 1 1 2
-#> [106] 1 1 1 2 1 1 2 1 1 2 2 1 2 1 1 2 2 1 2 1 1 2 2 1 2 1 2 1 2 2 2 2 1 1 2
-#> [141] 1 2 1 2 1 2 2 1 2 1 1 1 2 2 1 1 1 1 1 2 1 1 2 2 1 1 1 1 1 2 1 2 2 1 1
-#> [176] 1 2 2 1 2 1 1 2 2 1 1 2 2 2 2 1 2 1 1 2 2 2 1 2 1
-gR2(x, y, K=2, inference=TRUE) # with K specified and inference
-#> $estimate
-#> [1] 0.6797322
-#> 
-#> $conf.level
-#> [1] 0.95
-#> 
-#> $conf.int
-#> [1] 0.6115479 0.7479164
-#> 
-#> $p.val
-#> [1] 2.559628e-85
-#> 
-#> $K
-#> [1] 2
-#> 
-#> $membership
-#>   [1] 2 1 2 1 2 1 1 2 1 2 2 1 2 2 1 2 1 2 1 2 2 1 2 2 1 1 2 1 1 2 2 2 1 1 2
-#>  [36] 2 1 2 1 2 1 1 2 2 1 1 1 1 2 2 1 2 1 2 1 2 2 2 2 2 1 2 2 1 1 1 1 2 1 2
-#>  [71] 2 1 1 1 2 2 1 2 1 2 2 1 2 1 2 1 1 1 2 1 1 2 1 1 1 1 1 2 1 1 2 1 1 1 2
-#> [106] 1 1 1 2 1 1 2 1 1 2 2 1 2 1 1 2 2 1 2 1 1 2 2 1 2 1 2 1 2 2 2 2 1 1 2
-#> [141] 1 2 1 2 1 2 2 1 2 1 1 1 2 2 1 1 1 1 1 2 1 1 2 2 1 1 1 1 1 2 1 2 2 1 1
-#> [176] 1 2 2 1 2 1 1 2 2 1 1 2 2 2 2 1 2 1 1 2 2 2 1 2 1
-gR2(x, y, inference=TRUE) # without K specified, with inference
+#>   [1] 2 1 2 2 1 1 2 1 2 2 1 2 1 1 2 2 1 1 2 2 2 2 1 2 2 2 2 1 1 1 2 1 2 1 1
+#>  [36] 1 1 2 1 1 2 1 1 2 2 2 2 1 1 1 2 2 1 2 2 2 1 2 1 2 2 1 2 1 2 1 2 1 2 1
+#>  [71] 2 1 1 1 2 1 2 1 2 1 2 2 1 1 2 2 1 2 1 2 2 1 2 1 1 2 1 2 2 2 2 2 2 2 1
+#> [106] 2 1 1 2 1 2 1 2 2 2 1 1 1 2 1 1 2 2 1 1 2 1 2 2 1 1 2 1 2 1 1 2 2 2 1
+#> [141] 2 2 2 2 2 2 2 1 1 2 2 1 1 1 1 1 1 1 2 2 2 2 1 2 1 2 1 1 1 1 1 1 1 2 2
+#> [176] 1 2 2 2 2 2 2 1 2 1 2 2 1 2 2 1 2 2 1 1 2 1 2 1 2
+gR2(x, y, inference=TRUE, mc.cores=2) # without K specified, with inference
 #> Candidate K values: 1, 2, 3, 4
 ```
 
@@ -106,24 +85,26 @@ gR2(x, y, inference=TRUE) # without K specified, with inference
 
     #> The K value chosen by AIC is 2
     #> $estimate
-    #> [1] 0.6797322
+    #> [1] 0.6389837
     #> 
     #> $conf.level
     #> [1] 0.95
     #> 
     #> $conf.int
-    #> [1] 0.6115479 0.7479164
+    #> [1] 0.5647868 0.7131806
     #> 
     #> $p.val
-    #> [1] 2.559628e-85
+    #> [1] 3.199748e-64
     #> 
     #> $K
     #> [1] 2
     #> 
     #> $membership
-    #>   [1] 1 2 1 2 1 2 2 1 2 1 1 2 1 1 2 1 2 1 2 1 1 2 1 1 2 2 1 2 2 1 1 1 2 2 1
-    #>  [36] 1 2 1 2 1 2 2 1 1 2 2 2 2 1 1 2 1 2 1 2 1 1 1 1 1 2 1 1 2 2 2 2 1 2 1
-    #>  [71] 1 2 2 2 1 1 2 1 2 1 1 2 1 2 1 2 2 2 1 2 2 1 2 2 2 2 2 1 2 2 1 2 2 2 1
-    #> [106] 2 2 2 1 2 2 1 2 2 1 1 2 1 2 2 1 1 2 1 2 2 1 1 2 1 2 1 2 1 1 1 1 2 2 1
-    #> [141] 2 1 2 1 2 1 1 2 1 2 2 2 1 1 2 2 2 2 2 1 2 2 1 1 2 2 2 2 2 1 2 1 1 2 2
-    #> [176] 2 1 1 2 1 2 2 1 1 2 2 1 1 1 1 2 1 2 2 1 1 1 2 1 2
+    #>   [1] 1 2 1 1 2 2 1 2 1 1 2 1 2 2 1 1 2 2 1 1 1 1 2 1 1 1 1 2 2 2 1 2 1 2 2
+    #>  [36] 2 2 1 2 2 1 2 2 1 1 1 1 2 2 2 1 1 2 1 1 1 2 1 2 1 1 2 1 2 1 2 1 2 1 2
+    #>  [71] 1 2 2 2 1 2 1 2 1 2 1 1 2 2 1 1 2 1 2 1 1 2 1 2 2 1 2 1 1 1 1 1 1 1 2
+    #> [106] 1 2 2 1 2 1 2 1 1 1 2 2 2 1 2 2 1 1 2 2 1 2 1 1 2 2 1 2 1 2 2 1 1 1 2
+    #> [141] 1 1 1 1 1 1 1 2 2 1 1 2 2 2 2 2 2 2 1 1 1 1 2 1 2 1 2 2 2 2 2 2 2 1 1
+    #> [176] 2 1 1 1 1 1 1 2 1 2 1 1 2 1 1 2 1 1 2 2 1 2 1 2 1
+
+Please refer to the package [manual](https://github.com/lijy03/gR2/blob/master/gR2.pdf) for a full list of arguments and detailed usage.
