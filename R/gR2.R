@@ -20,7 +20,50 @@
 #' @param method a character string indicating which asymptotic distribution of the sample generalized measure is to be used for the inference. It must be one of \code{"general"} (the general asymptotic distribution) or \code{"binorm"} (the asymptotic distribution under the binormal distribution). The default is \code{"general"}.
 #' @param nstart the number of initial starts for the K-lines algorithm under the unsupervised scenario (\code{z=NULL}).
 #' @param mc.cores the number of cores to use, i.e. at most how many child processes will be run simultaneously. Must be at least one, and parallelization requires at least two cores. The default is the number of CPU cores minus one.
-#' @return dd
+#' @return \code{gR2} returns a list with the following components:
+#'
+#' \item{estimate}{The sample generalized R square measure.}
+#' \item{conf.level}{The confidence level for the returned confidence interval (if \code{inference} is \code{TRUE}).}
+#' \item{conf.int}{A numeric vector with two elements indicating the lower and upper bounds of the confidence interval (if \code{inference} is \code{TRUE}).}
+#' \item{p.val}{The p-value for testing against the null hypothesis that the population generalized R square measure is zero (if \code{inference} is \code{TRUE}).}
+#' \item{K}{The number of line relationships (if \code{z} is \code{NULL}).}
+#' \item{membership}{The inferred line memberships of the data points in \code{x} and \code{y} (if \code{z} is \code{NULL}).}
+#'
+#' @author Jingyi Jessica Li, \email{jli@@stat.ucla.edu}
+#' @references Li, J.J., Tong, X., and Bickel, P.J. (2018). Generalized R2 Measures for a Mixture of Bivariate Linear Dependences. arXiv.
+#' @keywords generalized_R_square K-lines_clustering
+#'
+#' @examples
+#' # generate data from a bivariate normal mixture model
+#' library(mvtnorm)
+#' library(parallel)
+#' n = 200 # sample size
+#' K = 2 # number of components (lines)
+#' p_s = c(0.5, 0.5) # proportions of components
+#' mu_s = list(c(0,-2), c(0,2)) # mean vectors
+#' Sigma_s = list(rbind(c(1,0.8),c(0.8,1)), rbind(c(1,0.8),c(0.8,1))) # covariance matrices
+#' z = sample(1:K, size=n, prob=p_s, replace=TRUE) # line memberships
+#' data = matrix(0, nrow=n, ncol=2)
+#' for (i in 1:K) {
+#'   idx = which(z==i)
+#'   data[idx,] = rmvnorm(n=length(idx), mean=mu_s[[i]], sigma=Sigma_s[[i]])
+#' }
+#' x = data[,1]
+#' y = data[,2]
+#'
+#' # supervised sample generalized R square
+#' gR2(x, y, z) # without inference
+#' gR2(x, y, z, inference=TRUE) # with inference
+#'
+#' # unsupervised sample generalized R square
+#' #gR2(x, y, K=2, mc.cores=2) # with K specified, without inference
+#' #gR2(x, y, inference=TRUE, mc.cores=2) # without K specified, with inference
+#'
+#' @export
+#' @importFrom lmodel2 lmodel2
+#' @importFrom mvtnorm dmvnorm
+#' @importFrom parallel mclapply detectCores
+#'
 
 gR2 <- function(x, y, z=NULL, K=NULL, # basic arguments
                 cand.Ks=1:4, # arguments for choosing K
@@ -70,36 +113,42 @@ gR2 <- function(x, y, z=NULL, K=NULL, # basic arguments
     }
   } else {
     # the unsupervised scenario
-    library(parallel)
     if (n < 50) {
       nstart <- floor(1500 / n)
     }
     if (is.null(K)) {
-      library(mvtnorm)
+      if (!requireNamespace("mvtnorm", quietly = TRUE)) {
+        stop("Package \"mvtnorm\" needed for this function to work. Please install it.",
+             call. = FALSE)
+      }
       # K unspecified
       # run K-lines clustering for a range of K values
       Ks <- cand.Ks
       cat(paste("Candidate K values:", paste(Ks, collapse=", "), "\n"))
-      results <- mclapply(Ks, FUN=function(K.cand) {
-        Klines(x, y, K.cand, ifchooseK=T, num_init=nstart)
-      }, mc.cores=mc.cores)
+      if (requireNamespace("parallel", quietly = TRUE)) {
+        results <- parallel::mclapply(Ks, FUN=function(K.cand) {
+          Klines(x, y, K.cand, ifchooseK=T, num_init=nstart)
+        }, mc.cores=mc.cores)
+      }
       # calculate the average within-cluster squared perpendicular distances & AICs
-      metrics <- sapply(results, FUN=function(x) {
-        D <- x$D
-        membership <- x$membership
+      metrics <- sapply(results, FUN=function(res) {
+        D <- res$D
+        membership <- res$membership
         W <- mean( sapply(1:n, FUN=function(i) {
           D[i, membership[i]]^2
         }) )
         K.cand <- length(unique(membership))
         joint_dens <- sapply(1:K.cand, FUN=function(k) {
           idx <- which(membership==k)
-          mu_k <- c( mean(data$x[idx]), mean(data$y[idx]) )
-          x_c <- data$x[idx] - mu_k[1]
-          y_c <- data$y[idx] - mu_k[2]
+          mu_k <- c( mean(x[idx]), mean(y[idx]) )
+          x_c <- x[idx] - mu_k[1]
+          y_c <- y[idx] - mu_k[2]
           mat_c <- rbind(x_c, y_c)
           Sigma_k <- mat_c %*% t(mat_c) / length(idx)
           p_k <- length(idx) / n
-          dmvnorm(cbind(data$x, data$y), mean=mu_k, sigma=Sigma_k, log = FALSE) * p_k
+          if (requireNamespace("mvtnorm", quietly = TRUE)) {
+            mvtnorm::dmvnorm(cbind(x, y), mean=mu_k, sigma=Sigma_k, log = FALSE) * p_k
+          }
         }) # an nxK matrix, the joint densities of (X_i, Y_i, Z_i)
         mar_dens <- rowSums(joint_dens) # an n-dim vector, the marginal densities of (X_i, Y_i)
         # the AIC
@@ -120,7 +169,7 @@ gR2 <- function(x, y, z=NULL, K=NULL, # basic arguments
       abline(v=K, lty=2)
       abline(v=K, lty=2)
 
-      cat(paste("The K value chosen by AIC is", K, ".\n"))
+      cat(paste("The K value chosen by AIC is", K, "\n"))
     }
     if (!inference) {
       # point estimate only

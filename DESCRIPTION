@@ -5,10 +5,10 @@ Version: 0.1.0
 Authors@R: person("Jingyi Jessica", "Li", email = "jli@stat.ucla.edu",
                   role = c("aut", "cre"))
 Maintainer: Jingyi Jessica Li <jli@stat.ucla.edu>
-Description: This R package contains functions to compute the supervised and unsupervised 
-    sample generalized R square measures. It also includes the K-lines clustering algorithm 
-    and a function to choose K for the unsupervised case. Functions for statistical inference 
-    of the supervised and unsupervised population generalied R square measures are also provided.
+Description: This R package contains a function to compute the supervised and unsupervised 
+    sample generalized R square measures. The function also implements the K-lines clustering algorithm 
+    and allows an automatic choice of K for the unsupervised case. Statistical inference 
+    of the supervised and unsupervised population generalied R square measures is also included.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true

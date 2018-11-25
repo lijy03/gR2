@@ -4,7 +4,6 @@ klines_init <- function(x, y, K) {
     stop("Package \"lmodel2\" needed for this function to work. Please install it.",
   	      call. = FALSE)
   }
-  library(lmodel2)
   n <- length(x)
   membership <- sample(1:K, size=n, replace=TRUE) # randomly assign the n points to K lines
   while (length(unique(membership)) < K | any(table(membership) < 3)) {
@@ -17,7 +16,9 @@ klines_init <- function(x, y, K) {
     lines <- sapply(1:K, FUN=function(i) {
       idx <- which(membership == i)
       if (var(y[idx]) > 0) {
-        suppressMessages(reg_res <- lmodel2(y[idx]~x[idx])$regression.results)
+        if (requireNamespace("lmodel2", quietly = TRUE)) {
+          suppressMessages(reg_res <- lmodel2::lmodel2(y[idx]~x[idx])$regression.results)
+        }
         a <- reg_res$Slope[reg_res$Method=="MA"]
         b <- reg_res$Intercept[reg_res$Method=="MA"]
       } else {
@@ -50,7 +51,6 @@ EM <- function(x, y, K) {
     stop("Package \"mvtnorm\" needed for this function to work. Please install it.",
     	      call. = FALSE)
   }
-  library(mvtnorm)
   # a functoin to cluster a scatterplot to K lines by hard K-lines algorithm
   if (length(x) != length(y)) {
     return("ERROR: x and y do not have the same length")
@@ -88,7 +88,7 @@ EM <- function(x, y, K) {
       p_k <- pam[[1]]
       mu_k <- pam[[2]]
       Sigma_k <- pam[[3]]
-      density_k <- dmvnorm(data, mean = mu_k, sigma = Sigma_k)
+      density_k <- mvtnorm::dmvnorm(data, mean = mu_k, sigma = Sigma_k)
       return(p_k * density_k)
     })
     kxi <- joint_densities / rowSums(joint_densities) # n x K
@@ -127,7 +127,6 @@ klines_each <- function(x, y, K, ifchooseK=F) {
     stop("Package \"lmodel2\" needed for this function to work. Please install it.",
 	      call. = FALSE)
   }
-  library(lmodel2)
   n <- length(x)
   # membership <- sample(1:K, size=n, replace=TRUE) # randomly assign the n points to K lines
   # while (length(unique(membership)) < K | any(table(membership) < 3)) {
@@ -149,7 +148,7 @@ klines_each <- function(x, y, K, ifchooseK=F) {
     lines <- sapply(1:K, FUN=function(i) {
       idx <- which(membership == i)
       if (var(y[idx]) > 0) {
-        suppressMessages(reg_res <- lmodel2(y[idx]~x[idx])$regression.results)
+        suppressMessages(reg_res <- lmodel2::lmodel2(y[idx]~x[idx])$regression.results)
         a <- reg_res$Slope[reg_res$Method=="MA"]
         b <- reg_res$Intercept[reg_res$Method=="MA"]
       } else {
@@ -199,8 +198,7 @@ klines_each <- function(x, y, K, ifchooseK=F) {
 
 # the K-lines clustering algorithm function
 Klines <- function(x, y, K, ifchooseK=F, num_init=1, mc.cores=1) {
-  library(parallel)	
-  results <- mclapply(1:num_init, FUN=function(i) {
+  results <- parallel::mclapply(1:num_init, FUN=function(i) {
     klines_each(x, y, K, ifchooseK)
   }, mc.cores=mc.cores)
   idx <- which.max(sapply(results, FUN=function(x) x$R2_g))
