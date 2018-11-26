@@ -31,7 +31,6 @@
 #'
 #' @author Jingyi Jessica Li, \email{jli@@stat.ucla.edu}
 #' @references Li, J.J., Tong, X., and Bickel, P.J. (2018). Generalized R2 Measures for a Mixture of Bivariate Linear Dependences. arXiv.
-#' @keywords generalized_R_square K-lines_clustering
 #'
 #' @examples
 #' # generate data from a bivariate normal mixture model

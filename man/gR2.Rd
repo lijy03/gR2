@@ -86,5 +86,3 @@ Li, J.J., Tong, X., and Bickel, P.J. (2018). Generalized R2 Measures for a Mixtu
 \author{
 Jingyi Jessica Li, \email{jli@stat.ucla.edu}
 }
-\keyword{K-lines_clustering}
-\keyword{generalized_R_square}

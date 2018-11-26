@@ -54,8 +54,8 @@ gR2(x, y, z) # without inference
 gR2(x, y, z, inference=TRUE) # with inference
 
 # unsupervised sample generalized R square
-gR2(x, y, K=2, mc.cores=2) # with K specified, without inference
-gR2(x, y, inference=TRUE, mc.cores=2) # without K specified, with inference
+gR2(x, y, K=2) # with K specified, without inference
+gR2(x, y, inference=TRUE) # without K specified, with inference
 ```
 
 Please refer to the package [manual](https://github.com/lijy03/gR2/blob/master/gR2.pdf)
