@@ -4,9 +4,19 @@
 \alias{gR2}
 \title{gR2}
 \usage{
-gR2(x, y, z = NULL, K = NULL, cand.Ks = 1:4, nstart = 30,
-  mc.cores = detectCores() - 1, regressionMethod = "MA",
-  inference = FALSE, conf.level = 0.95, method = "general")
+gR2(
+  x,
+  y,
+  z = NULL,
+  K = NULL,
+  cand.Ks = 1:4,
+  nstart = 30,
+  mc.cores = parallel::detectCores() - 1,
+  regressionMethod = "MA",
+  inference = FALSE,
+  conf.level = 0.95,
+  method = "general"
+)
 }
 \arguments{
 \item{x}{A numeric vector.}
@@ -17,11 +27,11 @@ gR2(x, y, z = NULL, K = NULL, cand.Ks = 1:4, nstart = 30,
 
 \item{K}{Number of lines in the unspecified scenario. Default is \code{NULL}.}
 
-\item{cand.Ks}{A vector of positive integers that represents the candidate K's in the unspecified scenario. Default is \code{1:4}.}
+\item{cand.Ks}{A vector of positive integers that represents the candidate K’s in the unspecified scenario. Default is \code{1:4}.}
 
 \item{nstart}{Number of initializations for the K-lines algorithm in the unspecified scenario. Default is \code{30}.}
 
-\item{mc.cores}{Number of cores to use in the unspecified scenario. The default is the number of CPU cores minus one.}
+\item{mc.cores}{Number of cores to use in the unspecified scenario. Default is the number of CPU cores minus one.}
 
 \item{regressionMethod}{Valid values are \code{"MA"} and \code{"LM"}. Indicates which regression method to use in the K-lines algorithm - major axis regression or linear regression. Default is \code{"MA"}.}
 
@@ -53,7 +63,7 @@ In the unspecified scenario (K chosen), we recommend that users set \code{K} to 
 In the unspecified scenario (K not chosen), the \code{gR2} function will automatically choose a \code{K} value from \code{cand.Ks} using the Akaike information criterion (AIC). Two plots will be outputted: (1) a scree plot that shows how average squared perpendicular/vertical distance changes with the candidate \code{K}, and (2), a plot that shows how AIC changes with the candidate \code{K}. Users can decide whether the \code{K} value chosen by the \code{gR2} function is reasonable by checking these two plots.
 }
 \references{
-Li, J.J., Tong, X., and Bickel, P.J. (2018). Generalized R2 Measures for a Mixture of Bivariate Linear Dependences. arXiv.
+Li, J.J., Tong, X., and Bickel, P.J. (2019). Generalized R2 Measures for a Mixture of Bivariate Linear Dependences. arXiv.
 }
 \author{
 Jingyi Jessica Li, \email{jli@stat.ucla.edu}
