@@ -22,7 +22,7 @@ gR2_Specified<-function(x,y,z,
 }
 
 #z is not null.
-#Returns sample gR2 (not in a list), which is a weighted average
+#Returns sample gR2 (scalar, not in a list), which is a weighted average
 get_Point_Estimate<-function(x,y,z){
   n<-length(x)
   z_uniq<-unique(z)

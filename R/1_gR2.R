@@ -14,13 +14,13 @@
 #' @param y A numeric vector of the same length as \code{x}.
 #' @param z A vector of integers that represents the line membership of all the data points. Must be of the same length as \code{x} and \code{y}. Default is \code{NULL}.
 #' @param K Number of lines in the unspecified scenario. Default is \code{NULL}.
-#' @param cand.Ks A vector of positive integers that represents the candidate K's in the unspecified scenario. Default is \code{1:4}.
+#' @param cand.Ks A vector of positive integers that represents the candidate K’s in the unspecified scenario. Default is \code{1:4}.
 #' @param nstart Number of initializations for the K-lines algorithm in the unspecified scenario. Default is \code{30}.
-#' @param mc.cores Number of cores to use in the unspecified scenario. The default is the number of CPU cores minus one.
-#' @param regressionMethod Valid values are \code{"MA"} and \code{"LM"}. Indicates which regression method to use in the K-lines algorithm - major axis regression or linear regression. Default is \code{"MA"}.
+#' @param mc.cores Number of cores to use in the unspecified scenario. Default is the number of CPU cores minus one.
+#' @param regressionMethod Valid values are \code{‘MA’} and \code{‘LM’}. Indicates which regression method to use in the K-lines algorithm - major axis regression or linear regression. Default is \code{‘MA’}.
 #' @param inference Logical. If \code{TRUE}, then a confidence interval for the population gR2 of confidence level \code{conf.level} will be calculated. Also will be calculated is a p-value of the hypothesis test where the null hypothesis is that the population gR2 is \code{0} and the alternative hypothesis is that the population gR2 is greater than \code{0}. Default is \code{FALSE}.
 #' @param conf.level The confidence level of the confidence interval. See description of \code{inference}. Default is \code{0.95}.
-#' @param method Valid values are \code{"general"} and \code{"binorm"}. Indicates which asymptotic distribution of the sample gR2 to use for inference. Default is \code{"general"}.
+#' @param method Valid values are \code{‘general’} and \code{‘binorm’}. Indicates which asymptotic distribution of the sample gR2 to use for inference. Default is \code{‘general’}.
 #'
 #' @return \code{gR2} returns a list consisting of one or more of the following items:
 #' \item{estimate}{The sample gR2.}
@@ -34,15 +34,12 @@
 #' @author Heather J Zhou, \email{heatherjzhou@ucla.edu}
 #'
 #' @references
-#' Li, J.J., Tong, X., and Bickel, P.J. (2018). Generalized R2 Measures for a Mixture of Bivariate Linear Dependences. arXiv.
+#' Li, J.J., Tong, X., and Bickel, P.J. (2019). Generalized R2 Measures for a Mixture of Bivariate Linear Dependences. arXiv.
 #'
 #' @export
-#' @importFrom lmodel2 lmodel2
-#' @importFrom parallel detectCores mclapply
-#' @importFrom mvtnorm dmvnorm
 
 gR2<-function(x,y,z=NULL, #basic arguments
-              K=NULL,cand.Ks=1:4,nstart=30,mc.cores=detectCores()-1,regressionMethod="MA", #arguments for unspecified scenario
+              K=NULL,cand.Ks=1:4,nstart=30,mc.cores=parallel::detectCores()-1,regressionMethod="MA", #arguments for unspecified scenario
               inference=FALSE,conf.level=0.95,method="general" #arguments for inference
               ){
 
@@ -75,3 +72,4 @@ gR2<-function(x,y,z=NULL, #basic arguments
     return(toReturn)
   }
 }
+

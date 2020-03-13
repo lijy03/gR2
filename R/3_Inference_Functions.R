@@ -19,9 +19,9 @@ get_asym_var_general<-function(x,y,z){
              mean(x_k_std^3*y_k_std),
              mean(x_k_std^2*y_k_std^2),
              mean(x_k_std*y_k_std^3),
-             muY4_k=mean(y_k_std^4)))
+             mean(y_k_std^4)))
   }) #7*K
-  
+
   #Second, store the rows of the parameter matrix as vectors
   p_s<-results[1,] #Vector of length K
   rho_s<-results[2,] #Vector of length K
@@ -30,7 +30,7 @@ get_asym_var_general<-function(x,y,z){
   mu_X2Y2_s<-results[5,] #Vector of length K
   mu_XY3_s<-results[6,] #Vector of length K
   mu_Y4_s<-results[7,] #Vector of length K
-  
+
   #Third, calculate asymptotic variance
   A_s<-p_s*
     (rho_s^4*(mu_X4_s+2*mu_X2Y2_s+mu_Y4_s)-4*rho_s^3*(mu_X3Y_s+mu_XY3_s)+4*rho_s^2*mu_X2Y2_s) #Vector of length K
@@ -57,11 +57,11 @@ get_asym_var_binorm<-function(x,y,z){
     return(c(p_k,
              rho_2_k))
   }) #2*K
-  
+
   #Second, store the rows of the parameter matrix as vectors
   p_s<-results[1,] #Vector of length K
   rho_2_s<-results[2,] #Vector of length K
-  
+
   #Third, calculate asymptotic variance
   A_s<-4*p_s*rho_2_s*(1-rho_2_s)^2 #Vector of length K
   B_s<-p_s*(1-p_s)*rho_2_s^2 #Vector of length K

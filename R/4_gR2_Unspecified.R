@@ -32,7 +32,7 @@ gR2_Unspecified<-function(x,y,
 
   #Save output from gR2_Specified in toReturn, and then add K and membership to it.
   toReturn1<-gR2_Specified(x,y,z=membership,
-                          inference,conf.level,method)
+                           inference,conf.level,method)
   toReturn2<-list(K=K,membership=membership)
   toReturn<-c(toReturn1,toReturn2)
 
