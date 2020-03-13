@@ -1,38 +1,46 @@
 ---
-output: pdf_document
+output: github_document
 ---
 
 ## Installation
 
-You can install gR2 from GitHub with:
+If you are using Linux or Windows, you can install gR2 from GitHub with:
 
 ```{r,eval=FALSE}
 #install.packages("devtools")
 devtools::install_github("lijy03/gR2")
-?gR2
 ```
+
+If you are using macOS, you may encounter this error when trying to install gR2 with the above command:
+
+clang: error: unsupported option '-fopenmp'
+
+To resolve this issue, you can follow the instructions found here:
+
+https://thecoatlessprofessor.com/programming/cpp/r-compiler-tools-for-rcpp-on-macos/, or
+
+https://github.com/rmacoslib/r-macos-rtools.
+
+Basically, what you need to do is download an macOS package (r-macos-rtools) and install it. Then, you should be able to install gR2 with devtools::install_github().
 
 ## Examples
 
-### Load packages and simulate data:
+### Simulate data:
 
 ```{r}
-library(mvtnorm)
-library(gR2)
-
 #Simulates data from a mixture of two bivariate normal distributions
 simulateData<-function(seed=1){
   set.seed(seed)
-  n=200 #sample size
-  K=2 #number of components (lines)
-  p_s=c(0.5,0.5) #proportions of components
+  n=200 #Sample size
+  K=2 #Number of components (lines)
+  p_s=c(0.5,0.5) #Proportions of components
   mu_s=list(c(0,-2),c(0,2)) #mean vectors
-  Sigma_s=list(rbind(c(1,0.8),c(0.8,1)),rbind(c(1,0.8),c(0.8,1))) #covariance matrices
-  z=sample(1:K,size=n,prob=p_s,replace=TRUE) #line memberships
+  Sigma_s=list(rbind(c(1,0.8),c(0.8,1)),rbind(c(1,0.8),c(0.8,1))) #Covariance matrices
+  z=sample(1:K,size=n,prob=p_s,replace=TRUE) #Line memberships
   data=matrix(0,nrow=n,ncol=2)
   for (i in 1:K){
     idx=which(z==i)
-    data[idx,]=rmvnorm(n=length(idx),mean=mu_s[[i]],sigma=Sigma_s[[i]])
+    data[idx,]=mvtnorm::rmvnorm(n=length(idx),mean=mu_s[[i]],sigma=Sigma_s[[i]])
   }
   return(cbind(data,z))
 }
@@ -46,26 +54,32 @@ z<-data[,3]
 ### Typical uses of gR2():
 
 ```{r}
+library(gR2)
+
+#The following two lines make gR2 reproducible:
+RNGkind("L'Ecuyer-CMRG")
+set.seed(11)
+
 #Specified scenario
-gR2(x,y,z) #No inference
-gR2(x,y,z,inference=TRUE) #Inference
+result<-gR2(x,y,z) #No inference
+result<-gR2(x,y,z,inference=TRUE) #Inference
 
 #Unspecified scenario (K chosen)
-gR2(x,y,K=2) #No inference
-gR2(x,y,K=2,inference=TRUE) #Inference
+result<-gR2(x,y,K=2) #No inference
+result<-gR2(x,y,K=2,inference=TRUE) #Inference
 
 #Unspecified scenario (K not chosen)
-gR2(x,y) #No inference
-gR2(x,y,inference=TRUE) #Inference
+#result<-gR2(x,y) #No inference
+result<-gR2(x,y,inference=TRUE) #Inference
 ```
 
-### Complete list of uses of gR2():
+### A more comprehensive list of uses of gR2():
 
 ```{r,eval=FALSE}
 #Basic categories: specified, unspecified K chosen, unspecified K not chosen
 #Inference: no inference, inference (general), inference (bivariate normal)
 #If unspecified: MA, LM
-#Total number of scenarios: 3+3+3+6=15
+#Total number of scenarios: 3 (specified) + 3 (unspecified K chosen, MA) + 3 (unspecified K not chosen, MA) + 6 (LM) = 15
 #If specified + no inference, then output a list of one item: estimate.
 #If specified + inference, then output a list of four items: estimate, conf.level, conf.int, and p.val.
 #If unspecified + no inference, then output a list of three item: estimate, K, membership.
