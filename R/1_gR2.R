@@ -41,7 +41,7 @@
 gR2<-function(x,y,z=NULL, #basic arguments
               K=NULL,cand.Ks=1:4,nstart=30,mc.cores=parallel::detectCores()-1,regressionMethod="MA", #arguments for unspecified scenario
               inference=FALSE,conf.level=0.95,method="general" #arguments for inference
-              ){
+){
 
   #Check inputs
   if(length(x)!=length(y)){stop("x and y must be of the same length.")}
