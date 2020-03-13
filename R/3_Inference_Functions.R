@@ -19,7 +19,7 @@ get_asym_var_general<-function(x,y,z){
              mean(x_k_std^3*y_k_std),
              mean(x_k_std^2*y_k_std^2),
              mean(x_k_std*y_k_std^3),
-             muY4_k=mean(y_k_std^4)))
+             mean(y_k_std^4)))
   }) #7*K
 
   #Second, store the rows of the parameter matrix as vectors
