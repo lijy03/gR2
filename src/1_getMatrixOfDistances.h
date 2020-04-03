@@ -4,6 +4,8 @@
 #include <RcppArmadillo.h>
 using namespace arma;
 
-arma::mat getMatrixOfDistances(const arma::vec x,const arma::vec y,const int K,arma::vec membership,const std::string regressionMethod);
+arma::mat getMatrixOfDistances(const arma::vec x,const arma::vec y,
+                               const int K,arma::vec membership,const std::string regressionMethod);
 
 #endif
+

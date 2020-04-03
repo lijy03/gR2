@@ -33,3 +33,4 @@ arma::vec getGroupSizes(const arma::vec membership,const int K);
 arma::vec myDmvnorm(const arma::mat x,const arma::rowvec mean,const arma::mat sigma);
 
 #endif
+

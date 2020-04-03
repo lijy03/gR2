@@ -1,13 +1,18 @@
 Package: gR2
 Type: Package
 Title: Generalized R Square Measures for a Mixture of Bivariate Linear Dependences
-Version: 1.2.0
+Version: 1.3.0
 Author: Jingyi Jessica Li, Heather J Zhou
 Maintainer: Jingyi Jessica Li <jli@stat.ucla.edu>, Heather J Zhou <heatherjzhou@ucla.edu>
 Description: This package implements the estimation and inference of generalized R square.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
-LinkingTo: Rcpp, RcppArmadillo
-Imports: Rcpp, parallel, mvtnorm
+RoxygenNote: 7.1.0
+LinkingTo:
+  Rcpp,RcppArmadillo,RcppParallel,
+  dqrng,sitmo
+Imports:
+  Rcpp,RcppParallel,
+  parallel,mvtnorm
+SystemRequirements: GNU make

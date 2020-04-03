@@ -1,18 +1,19 @@
 #First, clean and rebuild package.
 
-#This file shows that gR2 with Rcpp is reproducible.
+#This file shows that gR2 is reproducible.
 
 #Unspecified scenario, K chosen, MA/LM
 #Given a simulated data set and K, perform 1 comparisons
-#100 simulated data sets total
-#K varies from 1 to 4. So 25 simulated data sets for each K.
+#500 simulated data sets total
+#K varies from 1 to 4. So 12 simulated data sets for each K.
 
 library(gR2)
-RNGkind("L'Ecuyer-CMRG") #This has to do with random seeds in mclapply.
 source("/home/heatherjzhou/2019.06.25_gR2/gR2/test/Functions1_simulateData.R")
 
+numOfTests<-500
+
 fillResults<-function(results){
-  for (i in 1:100){
+  for (i in 1:numOfTests){
     data<-simulateData(seed=i)
     x<-data[,1]
     y<-data[,2]
@@ -27,10 +28,12 @@ fillResults<-function(results){
   return(results)
 }
 
-results<-matrix(rep(NA,300),nrow=100)
+results<-matrix(rep(NA,3*numOfTests),nrow=numOfTests)
 results<-fillResults(results)
 
-results2<-matrix(rep(NA,300),nrow=100)
+results2<-matrix(rep(NA,3*numOfTests),nrow=numOfTests)
 results2<-fillResults(results2)
 
-resultsCompare<-results2-results
+resultsCompare<-abs(results2-results)
+sum(resultsCompare) #0 is good.
+

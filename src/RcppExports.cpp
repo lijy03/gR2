@@ -6,20 +6,6 @@
 
 using namespace Rcpp;
 
-// Klines_eachCppOut
-Rcpp::List Klines_eachCppOut(const arma::vec x, const arma::vec y, const int K, const std::string regressionMethod);
-RcppExport SEXP _gR2_Klines_eachCppOut(SEXP xSEXP, SEXP ySEXP, SEXP KSEXP, SEXP regressionMethodSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec >::type x(xSEXP);
-    Rcpp::traits::input_parameter< const arma::vec >::type y(ySEXP);
-    Rcpp::traits::input_parameter< const int >::type K(KSEXP);
-    Rcpp::traits::input_parameter< const std::string >::type regressionMethod(regressionMethodSEXP);
-    rcpp_result_gen = Rcpp::wrap(Klines_eachCppOut(x, y, K, regressionMethod));
-    return rcpp_result_gen;
-END_RCPP
-}
 // Klines_1Cpp
 Rcpp::List Klines_1Cpp(const arma::vec x, const arma::vec y, const std::string regressionMethod);
 RcppExport SEXP _gR2_Klines_1Cpp(SEXP xSEXP, SEXP ySEXP, SEXP regressionMethodSEXP) {
@@ -33,10 +19,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Klines_not_1Cpp
+Rcpp::List Klines_not_1Cpp(const arma::vec x, const arma::vec y, const int K, const int num_init, const std::string regressionMethod);
+RcppExport SEXP _gR2_Klines_not_1Cpp(SEXP xSEXP, SEXP ySEXP, SEXP KSEXP, SEXP num_initSEXP, SEXP regressionMethodSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec >::type x(xSEXP);
+    Rcpp::traits::input_parameter< const arma::vec >::type y(ySEXP);
+    Rcpp::traits::input_parameter< const int >::type K(KSEXP);
+    Rcpp::traits::input_parameter< const int >::type num_init(num_initSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type regressionMethod(regressionMethodSEXP);
+    rcpp_result_gen = Rcpp::wrap(Klines_not_1Cpp(x, y, K, num_init, regressionMethod));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_gR2_Klines_eachCppOut", (DL_FUNC) &_gR2_Klines_eachCppOut, 4},
     {"_gR2_Klines_1Cpp", (DL_FUNC) &_gR2_Klines_1Cpp, 3},
+    {"_gR2_Klines_not_1Cpp", (DL_FUNC) &_gR2_Klines_not_1Cpp, 5},
     {NULL, NULL, 0}
 };
 

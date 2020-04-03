@@ -3,14 +3,9 @@
 #Source files
 if(TRUE){
   library(gR2)
-  RNGkind("L'Ecuyer-CMRG") #This has to do with random seeds in mclapply.
+  RNGkind("L'Ecuyer-CMRG") #This has to do with random seeds in mclapply, which is used in gR2_No_Rcpp.
 
-  # source("/home/heatherjzhou/2019.06.25_gR2/2019.10.29_Improving_gR2/2018.11.25_Original_Implementation/functions.R")
-  # source("/home/heatherjzhou/2019.06.25_gR2/2019.10.29_Improving_gR2/2018.11.25_Original_Implementation/gR2.R")
-  # source("/home/heatherjzhou/2019.06.25_gR2/2019.10.29_Improving_gR2/2018.11.25_Original_Implementation/Klines.R")
-  # source("/home/heatherjzhou/2019.06.25_gR2/2019.10.29_Improving_gR2/2018.11.25_Original_Implementation/R2gS.R")
-  # source("/home/heatherjzhou/2019.06.25_gR2/2019.10.29_Improving_gR2/2018.11.25_Original_Implementation/R2gU.R")
-
+  #Load gR2_No_Rcpp
   source("/home/heatherjzhou/2019.06.25_gR2/2019.11.20_gR2_Freeze_After_Sending_to_Jessica/R/1_gR2.R")
   source("/home/heatherjzhou/2019.06.25_gR2/2019.11.20_gR2_Freeze_After_Sending_to_Jessica/R/2_gR2_Specified.R")
   source("/home/heatherjzhou/2019.06.25_gR2/2019.11.20_gR2_Freeze_After_Sending_to_Jessica/R/3_Inference_Functions.R")
@@ -65,19 +60,19 @@ if(TRUE){
 
   #MA
   W_difference<-comparisons$W_No_Rcpp_Minus_W
-  sum(W_difference==0) #78. For 78 out of 100 times, the difference between W1 and W2 is 0.
-  sum(W_difference>0) #11. For 11 out of 100 times, the difference between W1 and W2 is positive.
-  sum(W_difference<0) #11. For 11 out of 100 times, the difference between W1 and W2 is negative.
-  mean(W_difference) #0.001089164 On average, W1 is slightly greater than W2. So my Rcpp code is definitely no worse than my code without Rcpp.
+  sum(W_difference==0) #75. For 75 out of 100 times, the difference between W1 and W2 is 0.
+  sum(W_difference>0) #13. For 13 out of 100 times, the difference between W1 and W2 is positive.
+  sum(W_difference<0) #12. For 12 out of 100 times, the difference between W1 and W2 is negative.
+  mean(W_difference) #-0.002575053. On average, W1 is slightly smaller than W2. But this can be explained by an outlier (see histogram).
   W_difference_nonzero<-W_difference[which(W_difference!=0)]
   hist(W_difference_nonzero)
 
   # #LM
   # W_difference<-comparisons$W_No_Rcpp_Minus_W
-  # sum(W_difference==0) #85. For 78 out of 100 times, the difference between W1 and W2 is 0.
-  # sum(W_difference>0) #10. For 11 out of 100 times, the difference between W1 and W2 is positive.
-  # sum(W_difference<0) #5. For 11 out of 100 times, the difference between W1 and W2 is negative.
-  # mean(W_difference) #0.001767276 On average, W1 is slightly greater than W2. So my Rcpp code is definitely no worse than my code without Rcpp.
+  # sum(W_difference==0) #88. For 88 out of 100 times, the difference between W1 and W2 is 0.
+  # sum(W_difference>0) #7 For 7 out of 100 times, the difference between W1 and W2 is positive.
+  # sum(W_difference<0) #5. For 5 out of 100 times, the difference between W1 and W2 is negative.
+  # mean(W_difference) #2.980256e-05. On average, W1 is slightly greater than W2. So gR2_RcppParallel is no worse than gR2_No_Rcpp.
   # W_difference_nonzero<-W_difference[which(W_difference!=0)]
   # hist(W_difference_nonzero)
 }
@@ -85,7 +80,6 @@ if(TRUE){
 #1.3. Unspecified scenario, K not chosen, MA/LM. Success.
 #Given a simulated data set and K, perform 3 comparisons: no inference, inference (general), and inference (bivariate normal)
 #10 simulated data sets total
-#Behavior is weird when MA, seed=3, but that's almost certainly a fluke.
 if(TRUE){
   comparisons<-matrix(rep(NA,90),nrow=10)
   for (i in 1:10){
@@ -96,8 +90,7 @@ if(TRUE){
 
   comparisons<-as.data.frame(comparisons)
   colnames(comparisons)<-c("Estimate equal","K equal","Num of different membership assignments","Estimate equal","K equal","Num of different membership assignments","Estimate equal","K equal","Num of different membership assignments")
-
-  #Look at comparisons
+  View(comparisons)
 }
 
 
@@ -195,3 +188,4 @@ if(TRUE){
   result16<-gR2(x,y,cand.Ks=1:5)
   result16
 }
+

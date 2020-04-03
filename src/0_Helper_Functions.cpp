@@ -89,5 +89,5 @@ arma::vec myDmvnorm(const arma::mat x,const arma::rowvec mean,const arma::mat si
 
     return toReturn;
   }
-
 }
+
