@@ -14,3 +14,4 @@ simulateData<-function(seed=1){
 
   return(cbind(data,z))
 }
+

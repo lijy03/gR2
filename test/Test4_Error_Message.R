@@ -13,3 +13,4 @@ if(TRUE){
   y<-rep(2,200)
   temp2<-gR2(x,y,K=1,regressionMethod="MA")
 }
+

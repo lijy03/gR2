@@ -10,7 +10,7 @@ comparisonUnspecifiedKChosen<-function(seed,K,nstart,regressionMethod){
   set.seed(7*seed)
   result11<-gR2_No_Rcpp(x,y,K=K,nstart=nstart,regressionMethod=regressionMethod)
   set.seed(7*seed)
-  result12<-gR2::gR2(x,y,K=K,nstart=nstart,regressionMethod=regressionMethod)
+  result12<-gR2(x,y,K=K,nstart=nstart,regressionMethod=regressionMethod)
   toReturn[1]<-seed
   toReturn[2]<-K
   toReturn[3]<-result11$estimate-result12$estimate
@@ -63,3 +63,4 @@ comparisonUnspecifiedKNotChosen<-function(seed,regressionMethod){
 
   return(toReturn)
 }
+
