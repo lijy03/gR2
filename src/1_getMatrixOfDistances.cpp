@@ -5,7 +5,8 @@ using namespace arma;
 //Given the current membership assignment (where each of the K groups has at least 3 data points),
 //for each k, subset x and y, get a and b, get n*1 vector of distances, and put vector in matrixOfDistances
 //Returns n*K matrixOfDistances
-arma::mat getMatrixOfDistances(const arma::vec x,const arma::vec y,const int K,arma::vec membership,const std::string regressionMethod){
+arma::mat getMatrixOfDistances(const arma::vec x,const arma::vec y,
+                               const int K,arma::vec membership,const std::string regressionMethod){
   const int n=x.n_elem;
   mat matrixOfDistances=zeros<mat>(n,K); //To be calculated and returned
 
@@ -66,3 +67,4 @@ arma::mat getMatrixOfDistances(const arma::vec x,const arma::vec y,const int K,a
 
   return(matrixOfDistances);
 }
+

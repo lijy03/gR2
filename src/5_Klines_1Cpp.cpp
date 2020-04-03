@@ -15,3 +15,4 @@ Rcpp::List Klines_1Cpp(const arma::vec x,const arma::vec y,const std::string reg
     Rcpp::Named("W")=W //Double
   );
 }
+
