@@ -1,10 +1,12 @@
 #include <RcppArmadillo.h>
+#include <dqrng_distribution.h>
 #include "0_Helper_Functions.h"
 using namespace arma;
 
 //Given the current membership assignment, update the assignment 100 times
 //Returns membership
-arma::vec EMUpdate100TimesCpp(const arma::vec x,const arma::vec y,const int K,arma::vec membership){
+arma::vec EMUpdate100TimesCpp(const arma::vec x,const arma::vec y,
+                              const int K,arma::vec membership,const dqrng::rng64_t rng){
   const double n=x.n_elem; //Set n as a double to avoid rounding in divisions
   const mat data=join_rows(x,y); //n*2
 
@@ -84,11 +86,16 @@ arma::vec EMUpdate100TimesCpp(const arma::vec x,const arma::vec y,const int K,ar
   while(TRUE){
     vec groupSizes=getGroupSizes(membership,K);
     if(any(groupSizes<3)){
-      //Rcpp::Rcout<<"Random normal invoked in EM updates"<<endl;
+      //cout<<"Random normal invoked in EM updates"<<endl;
       double sdOfkxi=stddev(vectorise(kxi));
-      mat noiseMatrix=sdOfkxi*randn(n,K);
-      kxi=kxi+noiseMatrix; //Changed from Jessica's implementation and my implementation in R.
-      membership=getMaxIndexByRow(kxi)+1; //Changed from Jessica's implementation and my implementation in R.
+      //mat noiseMatrix=sdOfkxi*randn(n,K); Replace with the following four lines to make reproducible
+      mat noiseMatrix(n,K);
+      dqrng::normal_distribution normalDist(0,1);
+      noiseMatrix.imbue([&](){return normalDist(*rng);}); //Draw each entry from normal(0,1)
+      noiseMatrix=sdOfkxi*noiseMatrix;
+
+      kxi=kxi+noiseMatrix;
+      membership=getMaxIndexByRow(kxi)+1;
     }else{
       break;
     }
@@ -96,3 +103,4 @@ arma::vec EMUpdate100TimesCpp(const arma::vec x,const arma::vec y,const int K,ar
 
   return membership;
 }
+
