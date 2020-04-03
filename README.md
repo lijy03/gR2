@@ -58,9 +58,7 @@ z<-data[,3]
 ``` r
 library(gR2)
 
-#The following two lines make gR2 reproducible:
-RNGkind("L'Ecuyer-CMRG")
-set.seed(11)
+set.seed(11) #Use set.seed() to make gR2 reproducible in the unspecified scenario
 
 #Specified scenario
 result<-gR2(x,y,z) #No inference
