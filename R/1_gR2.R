@@ -18,6 +18,7 @@
 #' @param nstart Number of initializations for the K-lines algorithm in the unspecified scenario. Default is \code{30}.
 #' @param mc.cores Number of cores to use in the unspecified scenario. Default is \code{NULL}, which means all of the available cores will be used.
 #' @param regressionMethod Valid values are \code{‘MA’} and \code{‘LM’}. Indicates which regression method to use in the K-lines algorithm - major axis regression or linear regression. Default is \code{‘MA’}.
+#' @param verbose Logical. If \code{TRUE}, then messages are printed and a graph is produced in the unspecified scenario (K not chosen). Default is \code{TRUE}.
 #' @param inference Logical. If \code{TRUE}, then a confidence interval for the population gR2 of confidence level \code{conf.level} will be calculated. Also will be calculated is a p-value of the hypothesis test where the null hypothesis is that the population gR2 is \code{0} and the alternative hypothesis is that the population gR2 is greater than \code{0}. Default is \code{FALSE}.
 #' @param conf.level The confidence level of the confidence interval. See description of \code{inference}. Default is \code{0.95}.
 #' @param method Valid values are \code{‘general’} and \code{‘binorm’}. Indicates which asymptotic distribution of the sample gR2 to use for inference. Default is \code{‘general’}.
@@ -39,7 +40,7 @@
 #' @export
 
 gR2<-function(x,y,z=NULL, #basic arguments
-              K=NULL,cand.Ks=1:4,nstart=30,mc.cores=NULL,regressionMethod="MA", #arguments for unspecified scenario
+              K=NULL,cand.Ks=1:4,nstart=30,mc.cores=NULL,regressionMethod="MA",verbose=TRUE, #arguments for unspecified scenario
               inference=FALSE,conf.level=0.95,method="general" #arguments for inference
               ){
 
@@ -62,12 +63,12 @@ gR2<-function(x,y,z=NULL, #basic arguments
     #Unspecified scenario
     #First,
     #if K is chosen, get membership.
-    #If K is not chosen, choose K and get membership (and print explanations along the way).
+    #If K is not chosen, choose K and get membership (and print explanations along the way if verbose).
     #Then,
     #if inference is false, then return a list of three item: estimate, K, membership.
     #If inference is true, then return a list of six items: estimate, conf.level, conf.int, p.val, K, membership.
     toReturn<-gR2_Unspecified(x,y,
-                              K,cand.Ks,num_init=nstart,mc.cores,regressionMethod,
+                              K,cand.Ks,num_init=nstart,mc.cores,regressionMethod,verbose,
                               inference,conf.level,method)
     return(toReturn)
   }
