@@ -13,6 +13,7 @@ gR2(
   nstart = 30,
   mc.cores = NULL,
   regressionMethod = "MA",
+  verbose = TRUE,
   inference = FALSE,
   conf.level = 0.95,
   method = "general"
@@ -34,6 +35,8 @@ gR2(
 \item{mc.cores}{Number of cores to use in the unspecified scenario. Default is \code{NULL}, which means all of the available cores will be used.}
 
 \item{regressionMethod}{Valid values are \code{‘MA’} and \code{‘LM’}. Indicates which regression method to use in the K-lines algorithm - major axis regression or linear regression. Default is \code{‘MA’}.}
+
+\item{verbose}{Logical. If \code{TRUE}, then messages are printed and a graph is produced in the unspecified scenario (K not chosen). Default is \code{TRUE}.}
 
 \item{inference}{Logical. If \code{TRUE}, then a confidence interval for the population gR2 of confidence level \code{conf.level} will be calculated. Also will be calculated is a p-value of the hypothesis test where the null hypothesis is that the population gR2 is \code{0} and the alternative hypothesis is that the population gR2 is greater than \code{0}. Default is \code{FALSE}.}
 
