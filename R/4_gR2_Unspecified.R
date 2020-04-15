@@ -70,7 +70,6 @@ gR2_Unspecified_Choose_K<-function(x,y,
   #If verbose, print "The K value chosen by AIC is 2." (if 2 is chosen)
   if(verbose) cat("The K value chosen by AIC is ",K,".","\n",sep="")
 
-  membership<-results[[K]]$membership
   #If verbose, plot W and AIC against candidate K
   if(verbose){
     par(mfrow=c(2,1),mar=c(3,3,2,1)) #"mar" means margin
@@ -84,6 +83,7 @@ gR2_Unspecified_Choose_K<-function(x,y,
     abline(v=K,lty=2) #lyt means line type.
   }
 
+  membership<-results[[which.min(AICs)]]$membership
   toReturn<-list(K=K,membership=membership)
   return(toReturn)
 }
