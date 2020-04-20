@@ -101,3 +101,65 @@ result16
 result17<-gR2(x,y,cand.Ks=2:5)
 result17
 
+#Check gR2.pop and alternative
+#Specified scenario
+if(TRUE){
+  set.seed(1)
+  result18<-gR2(x,y,z,inference=TRUE,gR2.pop=0,alternative="two.sided")
+  set.seed(1)
+  result19<-gR2(x,y,z,inference=TRUE,gR2.pop=0,alternative="less")
+  set.seed(1)
+  result20<-gR2(x,y,z,inference=TRUE,gR2.pop=0,alternative="greater")
+  identical(result18,result19)
+  identical(result19,result20)
+
+  set.seed(1)
+  result18<-gR2(x,y,z,inference=TRUE,gR2.pop=0.2,alternative="two.sided")
+  set.seed(1)
+  result19<-gR2(x,y,z,inference=TRUE,gR2.pop=0.2,alternative="less")
+  set.seed(1)
+  result20<-gR2(x,y,z,inference=TRUE,gR2.pop=0.2,alternative="greater")
+  (result18$p.val)==(result20$p.val*2)
+  (result19$p.val)==(1-result20$p.val)
+}
+#Unspecified scenario (K chosen)
+if(TRUE){
+  set.seed(1)
+  result18<-gR2(x,y,K=2,inference=TRUE,gR2.pop=0,alternative="two.sided")
+  set.seed(1)
+  result19<-gR2(x,y,K=2,inference=TRUE,gR2.pop=0,alternative="less")
+  set.seed(1)
+  result20<-gR2(x,y,K=2,inference=TRUE,gR2.pop=0,alternative="greater")
+  identical(result18,result19)
+  identical(result19,result20)
+
+  set.seed(1)
+  result18<-gR2(x,y,K=2,inference=TRUE,gR2.pop=0.2,alternative="two.sided")
+  set.seed(1)
+  result19<-gR2(x,y,K=2,inference=TRUE,gR2.pop=0.2,alternative="less")
+  set.seed(1)
+  result20<-gR2(x,y,K=2,inference=TRUE,gR2.pop=0.2,alternative="greater")
+  (result18$p.val)==(result20$p.val*2)
+  (result19$p.val)==(1-result20$p.val)
+}
+#Unspecified scenario (K not chosen)
+if(TRUE){
+  set.seed(1)
+  result18<-gR2(x,y,inference=TRUE,gR2.pop=0,alternative="two.sided")
+  set.seed(1)
+  result19<-gR2(x,y,inference=TRUE,gR2.pop=0,alternative="less")
+  set.seed(1)
+  result20<-gR2(x,y,inference=TRUE,gR2.pop=0,alternative="greater")
+  identical(result18,result19)
+  identical(result19,result20)
+
+  set.seed(1)
+  result18<-gR2(x,y,inference=TRUE,gR2.pop=0.2,alternative="two.sided")
+  set.seed(1)
+  result19<-gR2(x,y,inference=TRUE,gR2.pop=0.2,alternative="less")
+  set.seed(1)
+  result20<-gR2(x,y,inference=TRUE,gR2.pop=0.2,alternative="greater")
+  (result18$p.val)==(result20$p.val*2)
+  (result19$p.val)==(1-result20$p.val)
+}
+
