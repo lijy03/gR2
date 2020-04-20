@@ -43,7 +43,7 @@
 
 gR2<-function(x,y,z=NULL, #basic arguments
               K=NULL,cand.Ks=1:4,nstart=30,mc.cores=NULL,regressionMethod="MA",verbose=TRUE, #arguments for unspecified scenario
-              inference=FALSE,conf.level=0.95,method="general" #arguments for inference
+              inference=FALSE,conf.level=0.95,gR2.pop=0,alternative="greater",method="general" #arguments for inference
               ){
 
   #Check inputs
@@ -59,7 +59,7 @@ gR2<-function(x,y,z=NULL, #basic arguments
     #If inference is false, then return a list of one item: estimate.
     #If inference is true, then return a list of four items: estimate, conf.level, conf.int, and p.val.
     toReturn<-gR2_Specified(x,y,z,
-                            inference,conf.level,method)
+                            inference,conf.level,gR2.pop,alternative,method)
     return(toReturn)
   }else{
     #Unspecified scenario
@@ -71,7 +71,7 @@ gR2<-function(x,y,z=NULL, #basic arguments
     #If inference is true, then return a list of six items: estimate, conf.level, conf.int, p.val, K, membership.
     toReturn<-gR2_Unspecified(x,y,
                               K,cand.Ks,num_init=nstart,mc.cores,regressionMethod,verbose,
-                              inference,conf.level,method)
+                              inference,conf.level,gR2.pop,alternative,method)
     return(toReturn)
   }
 }

@@ -7,7 +7,7 @@
 #If inference is true, then return a list of six items: estimate, conf.level, conf.int, p.val, K, membership.
 gR2_Unspecified<-function(x,y,
                           K,cand.Ks,num_init,mc.cores,regressionMethod,verbose,
-                          inference,conf.level,method){
+                          inference,conf.level,gR2.pop,alternative,method){
   #num_init (number of initializations)
   #num_init is 30 by default. However, when n is smaller than 50, num_init is set to be larger.
   n<-length(x)
@@ -32,7 +32,7 @@ gR2_Unspecified<-function(x,y,
 
   #Save output from gR2_Specified in a list, and then add K and membership to it.
   toReturn1<-gR2_Specified(x,y,z=membership,
-                           inference,conf.level,method)
+                           inference,conf.level,gR2.pop,alternative,method)
   toReturn2<-list(K=K,membership=membership)
   toReturn<-c(toReturn1,toReturn2)
 

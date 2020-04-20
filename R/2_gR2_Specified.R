@@ -2,7 +2,7 @@
 #If inference is false, then return a list of one item: estimate.
 #If inference is true, then return a list of four items: estimate, conf.level, conf.int, and p.val.
 gR2_Specified<-function(x,y,z,
-                        inference,conf.level,method){
+                        inference,conf.level,gR2.pop,alternative,method){
   #Point estimate
   point_estimate<-get_Point_Estimate(x,y,z)
   toReturn1<-list(estimate=point_estimate)
@@ -14,7 +14,7 @@ gR2_Specified<-function(x,y,z,
   }else{
     #Inference
     toReturn2<-gR2_Specified_Inference(x,y,z,
-                                       conf.level,method,
+                                       conf.level,gR2.pop,alternative,method,
                                        point_estimate) #A list of three items: conf.level, conf.int, and p.val
     toReturn<-c(toReturn1,toReturn2)
     return(toReturn) #A list of four items: estimate, conf.level, conf.int, and p.val
@@ -45,7 +45,7 @@ get_Point_Estimate<-function(x,y,z){
 #z is not null.
 #Returns a list of three items: conf.level, conf.int, and p.val
 gR2_Specified_Inference<-function(x,y,z,
-                                  conf.level,method,
+                                  conf.level,gR2.pop,alternative,method,
                                   point_estimate){
   #Get asymptotic variance (\gamma^2)
   if (method=="general"){
@@ -60,7 +60,23 @@ gR2_Specified_Inference<-function(x,y,z,
   tail.prob<-(1-conf.level)/2
   quantiles<-c(tail.prob,1-tail.prob)
   CI<-point_estimate+qnorm(quantiles)*std
-  p.val<-pnorm(point_estimate,mean=0,sd=std,lower.tail=F)
+
+  #Calculate p-value
+  if(gR2.pop==0){ #If gR2.pop=0, then use the alternative hypothesis gR2.pop>0 regardless of alternative.
+    p.val<-pnorm(point_estimate,mean=gR2.pop,sd=std,lower.tail=F)
+  }else{ #If gR2.pop>0, then proceed as usual.
+    if(alternative=="two.sided"){
+      p.val1<-pnorm(point_estimate,mean=gR2.pop,sd=std,lower.tail=T)
+      p.val2<-pnorm(point_estimate,mean=gR2.pop,sd=std,lower.tail=F)
+      p.val<-2*min(p.val1,p.val2)
+    }
+    else if(alternative=="less"){
+      p.val<-pnorm(point_estimate,mean=gR2.pop,sd=std,lower.tail=T)
+    }
+    else if(alternative=="greater"){
+      p.val<-pnorm(point_estimate,mean=gR2.pop,sd=std,lower.tail=F)
+    }
+  }
 
   #Return
   toReturn<-list(conf.level=conf.level,conf.int=CI,p.val=p.val)
