@@ -8,7 +8,7 @@
 #'
 #' In the unspecified scenario (K chosen), we recommend that users set \code{K} to be less than or equal to \code{4} for interpretability.
 #'
-#' In the unspecified scenario (K not chosen), the \code{gR2} function will automatically choose a \code{K} value from \code{cand.Ks} using the Akaike information criterion (AIC). Two plots will be outputted: (1) a scree plot that shows how average squared perpendicular/vertical distance changes with the candidate \code{K}, and (2), a plot that shows how AIC changes with the candidate \code{K}. Users can decide whether the \code{K} value chosen by the \code{gR2} function is reasonable by checking these two plots.
+#' In the unspecified scenario (K not chosen), the \code{gR2} function automatically chooses a \code{K} value from \code{cand.Ks} using the Akaike information criterion (AIC). Two plots are outputted unless \code{verbose} is set to \code{FALSE}: (1) a scree plot that shows how average squared perpendicular/vertical distance changes with the candidate \code{K}, and (2), a plot that shows how AIC changes with the candidate \code{K}. Users can decide whether the \code{K} value chosen by the \code{gR2} function is reasonable by checking these two plots.
 #'
 #' @param x A numeric vector.
 #' @param y A numeric vector of the same length as \code{x}.
@@ -16,18 +16,20 @@
 #' @param K Number of lines in the unspecified scenario. Default is \code{NULL}.
 #' @param cand.Ks A vector of positive integers that represents the candidate K’s in the unspecified scenario. Default is \code{1:4}.
 #' @param nstart Number of initializations for the K-lines algorithm in the unspecified scenario. Default is \code{30}.
-#' @param mc.cores Number of cores to use in the unspecified scenario. Default is \code{NULL}, which means all of the available cores will be used.
+#' @param mc.cores Number of cores to use in the unspecified scenario. Default is \code{NULL}, which means all of the available cores are used.
 #' @param regressionMethod Valid values are \code{‘MA’} and \code{‘LM’}. Indicates which regression method to use in the K-lines algorithm - major axis regression or linear regression. Default is \code{‘MA’}.
 #' @param verbose Logical. If \code{TRUE}, then messages are printed and a graph is produced in the unspecified scenario (K not chosen). Default is \code{TRUE}.
-#' @param inference Logical. If \code{TRUE}, then a confidence interval for the population gR2 of confidence level \code{conf.level} will be calculated. Also will be calculated is a p-value of the hypothesis test where the null hypothesis is that the population gR2 is \code{0} and the alternative hypothesis is that the population gR2 is greater than \code{0}. Default is \code{FALSE}.
-#' @param conf.level The confidence level of the confidence interval. See description of \code{inference}. Default is \code{0.95}.
+#' @param inference Logical. If \code{TRUE}, then the function calculates a confidence interval for the population gR2 of confidence level \code{conf.level}, as well as a p-value of the hypothesis test where the null hypothesis is that the population gR2 is equal to \code{gR2.pop}. Default is \code{FALSE}.
+#' @param conf.level The confidence level of the confidence interval. Default is \code{0.95}.
+#' @param gR2.pop The population gR2 in the null hypothesis of the hypothesis test. Must be between \code{0} and \code{1}. Default is \code{0}.
+#' @param alternative Valid values are \code{‘two.sided’}, \code{‘less’}, and \code{‘greater’}. Indicates the type of the alternative hypothesis in the hypothesis test.
 #' @param method Valid values are \code{‘general’} and \code{‘binorm’}. Indicates which asymptotic distribution of the sample gR2 to use for inference. Default is \code{‘general’}.
 #'
 #' @return \code{gR2} returns a list consisting of one or more of the following items:
 #' \item{estimate}{The sample gR2.}
 #' \item{conf.level}{The confidence level of the confidence interval (if \code{inference} is \code{TRUE}).}
 #' \item{conf.int}{The confidence interval for the population gR2 (if \code{inference} is \code{TRUE}).}
-#' \item{p.val}{The p-value of the hypothesis test where the null hypothesis is that the population gR2 is \code{0} and the alternative hypothesis is that the population gR2 is greater than \code{0} (if \code{inference} is \code{TRUE}).}
+#' \item{p.val}{The p-value of the hypothesis test where the null hypothesis is that the population gR2 is equal to \code{gR2.pop} and the alternative hypothesis is that the population gR2 is not equal to, less than, or greater than \code{gR2.pop} depending on \code{alternative} (if \code{inference} is \code{TRUE}).}
 #' \item{K}{The number of lines in the unspecified scenario, either chosen by the user or chosen from \code{cand.Ks} by the \code{gR2} function.}
 #' \item{membership}{The inferred line membership of all the data points in the unspecified scenario.}
 #'
