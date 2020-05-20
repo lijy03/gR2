@@ -5,7 +5,7 @@
 #Unspecified scenario, K chosen, MA/LM
 #Given a simulated data set and K, perform 1 comparisons
 #500 simulated data sets total
-#K varies from 1 to 4. So 12 simulated data sets for each K.
+#K varies from 1 to 4. So 125 simulated data sets for each K.
 
 library(gR2)
 source("/home/heatherjzhou/2019.06.25_gR2/gR2/test/Functions1_simulateData.R")

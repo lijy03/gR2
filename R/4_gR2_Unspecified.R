@@ -1,13 +1,13 @@
 #Unspecified scenario
 #First,
 #if K is chosen, get membership.
-#If K is not chosen, choose K and get membership (and print explanations along the way).
+#If K is not chosen, choose K and get membership (and print explanations along the way if verbose).
 #Then,
 #if inference is false, then return a list of three item: estimate, K, membership.
 #If inference is true, then return a list of six items: estimate, conf.level, conf.int, p.val, K, membership.
 gR2_Unspecified<-function(x,y,
-                          K,cand.Ks,num_init,mc.cores,regressionMethod,
-                          inference,conf.level,method){
+                          K,cand.Ks,num_init,mc.cores,regressionMethod,verbose,
+                          inference,conf.level,gR2.pop,alternative,method){
   #num_init (number of initializations)
   #num_init is 30 by default. However, when n is smaller than 50, num_init is set to be larger.
   n<-length(x)
@@ -23,16 +23,16 @@ gR2_Unspecified<-function(x,y,
     membership<-result$membership
     #W<-result$W #Don't need to store W when K is chosen
   }else{
-    #If K is not chosen, choose K and get membership (and print explanations along the way).
+    #If K is not chosen, choose K and get membership (and print explanations along the way if verbose).
     result<-gR2_Unspecified_Choose_K(x,y,
-                                     cand.Ks,num_init,mc.cores,regressionMethod)
+                                     cand.Ks,num_init,mc.cores,regressionMethod,verbose)
     K<-result$K
     membership<-result$membership
   }
 
-  #Save output from gR2_Specified in toReturn, and then add K and membership to it.
+  #Save output from gR2_Specified in a list, and then add K and membership to it.
   toReturn1<-gR2_Specified(x,y,z=membership,
-                           inference,conf.level,method)
+                           inference,conf.level,gR2.pop,alternative,method)
   toReturn2<-list(K=K,membership=membership)
   toReturn<-c(toReturn1,toReturn2)
 
@@ -41,11 +41,11 @@ gR2_Unspecified<-function(x,y,
 }
 
 #Choose K
-#Returns a list of two items: chosen K and membership; prints explanations along the way
+#Returns a list of two items: chosen K and membership; prints explanations along the way if verbose
 gR2_Unspecified_Choose_K<-function(x,y,
-                                   cand.Ks,num_init,mc.cores,regressionMethod){
-  #Print "Candidate K values: 1, 2, 3, 4"
-  cat("Candidate K values: ",paste(cand.Ks,collapse=", "),"\n",sep="")
+                                   cand.Ks,num_init,mc.cores,regressionMethod,verbose){
+  #If verbose, print "Candidate K values: 1, 2, 3, 4" (by default)
+  if(verbose) cat("Candidate K values: ",paste(cand.Ks,collapse=", "),"\n",sep="")
 
   #Run Klines on each candidate K
   results<-lapply(cand.Ks,FUN=function(cand.K){
@@ -67,19 +67,23 @@ gR2_Unspecified_Choose_K<-function(x,y,
   #Choose K
   K<-cand.Ks[which.min(AICs)]
 
-  #Plots of W and AIC against candidate K:
-  par(mfrow=c(2,1),mar=c(3,3,2,1)) #"mar" means margin
-  #Scree plot
-  plot(cand.Ks,Ws,type="l",main="Scree plot")
-  title(xlab="K",ylab="Avg. sq. perp./vert. dist.",line=2)
-  abline(v=K,lty=2)
-  #Plot: Choose K by AIC
-  plot(cand.Ks,AICs,type="l",main="Choose K by AIC")
-  title(xlab="K",ylab="AIC",line=2)
-  abline(v=K,lty=2)
+  #If verbose, print "The K value chosen by AIC is 2." (if 2 is chosen)
+  if(verbose) cat("The K value chosen by AIC is ",K,".","\n",sep="")
 
-  cat("The K value chosen by AIC is ",K,".","\n",sep="")
-  membership<-results[[K]]$membership
+  #If verbose, plot W and AIC against candidate K
+  if(verbose){
+    par(mfrow=c(2,1),mar=c(3,3,2,1)) #"mar" means margin
+    #Top panel: Scree plot
+    plot(cand.Ks,Ws,type="l",main="Scree plot")
+    title(xlab="K",ylab="Avg. sq. perp./vert. dist.",line=2)
+    abline(v=K,lty=2) #lyt means line type.
+    #Bottom panel: Choose K by AIC
+    plot(cand.Ks,AICs,type="l",main="Choose K by AIC")
+    title(xlab="K",ylab="AIC",line=2)
+    abline(v=K,lty=2) #lyt means line type.
+  }
+
+  membership<-results[[which.min(AICs)]]$membership
   toReturn<-list(K=K,membership=membership)
   return(toReturn)
 }
