@@ -10,9 +10,9 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
 LinkingTo:
-  Rcpp,RcppArmadillo,RcppParallel,
-  dqrng,sitmo
+  Rcpp, RcppArmadillo, RcppParallel,
+  dqrng, BH, sitmo
 Imports:
-  Rcpp,RcppParallel,
-  parallel,mvtnorm
+  Rcpp, RcppParallel,
+  parallel, mvtnorm
 SystemRequirements: GNU make
