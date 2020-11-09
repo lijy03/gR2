@@ -24,6 +24,7 @@
 #' @param gR2.pop The population gR2 in the null hypothesis of the hypothesis test. Must be between \code{0} and \code{1}. Default is \code{0}.
 #' @param alternative Valid values are \code{‘two.sided’}, \code{‘less’}, and \code{‘greater’}. Indicates the type of the alternative hypothesis in the hypothesis test.
 #' @param method Valid values are \code{‘general’} and \code{‘binorm’}. Indicates which asymptotic distribution of the sample gR2 to use for inference. Default is \code{‘general’}.
+#' @param details Logical. If \code{TRUE}, then detailed information about each line (R squared and its corresponding p-value) is outputted. Only available in the unspecified scenario. Default is \code{FALSE}.
 #'
 #' @return \code{gR2} returns a list consisting of one or more of the following items:
 #' \item{estimate}{The sample gR2.}
@@ -32,6 +33,7 @@
 #' \item{p.val}{The p-value of the hypothesis test where the null hypothesis is that the population gR2 is equal to \code{gR2.pop} and the alternative hypothesis is that the population gR2 is not equal to, less than, or greater than \code{gR2.pop} depending on \code{alternative} (if \code{inference} is \code{TRUE}).}
 #' \item{K}{The number of lines in the unspecified scenario, either chosen by the user or chosen from \code{cand.Ks} by the \code{gR2} function.}
 #' \item{membership}{The inferred line membership of all the data points in the unspecified scenario.}
+#' \item{perLineInfo}{A matrix with three columns: lineIndex, R2, and pValue. Each row corresponds to a line. Total number of rows is \code{K}, the number of lines chosen.}
 #'
 #' @author Jingyi Jessica Li, \email{jli@stat.ucla.edu}
 #' @author Heather J Zhou, \email{heatherjzhou@ucla.edu}
@@ -42,8 +44,9 @@
 #' @export
 
 gR2<-function(x,y,z=NULL, #basic arguments
-              K=NULL,cand.Ks=1:4,nstart=30,mc.cores=NULL,regressionMethod="MA",verbose=TRUE, #arguments for unspecified scenario
-              inference=FALSE,conf.level=0.95,gR2.pop=0,alternative="greater",method="general" #arguments for inference
+              K=NULL,cand.Ks=1:4,nstart=30,mc.cores=NULL,regressionMethod="MA",verbose=TRUE, #Arguments for unspecified scenario
+              inference=FALSE,conf.level=0.95,gR2.pop=0,alternative="greater",method="general", #Arguments for inference
+              details=FALSE #Additional arguments
               ){
 
   #Check inputs
@@ -69,9 +72,11 @@ gR2<-function(x,y,z=NULL, #basic arguments
     #Then,
     #if inference is false, then return a list of three item: estimate, K, membership.
     #If inference is true, then return a list of six items: estimate, conf.level, conf.int, p.val, K, membership.
+    #Also, if details is true, then include perLineInfo in the list as well.
     toReturn<-gR2_Unspecified(x,y,
                               K,cand.Ks,num_init=nstart,mc.cores,regressionMethod,verbose,
-                              inference,conf.level,gR2.pop,alternative,method)
+                              inference,conf.level,gR2.pop,alternative,method,
+                              details)
     return(toReturn)
   }
 }
