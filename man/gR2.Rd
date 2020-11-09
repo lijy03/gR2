@@ -18,7 +18,8 @@ gR2(
   conf.level = 0.95,
   gR2.pop = 0,
   alternative = "greater",
-  method = "general"
+  method = "general",
+  details = FALSE
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ gR2(
 \item{alternative}{Valid values are \code{‘two.sided’}, \code{‘less’}, and \code{‘greater’}. Indicates the type of the alternative hypothesis in the hypothesis test.}
 
 \item{method}{Valid values are \code{‘general’} and \code{‘binorm’}. Indicates which asymptotic distribution of the sample gR2 to use for inference. Default is \code{‘general’}.}
+
+\item{details}{Logical. If \code{TRUE}, then detailed information about each line (R squared and its corresponding p-value) is outputted. Only available in the unspecified scenario. Default is \code{FALSE}.}
 }
 \value{
 \code{gR2} returns a list consisting of one or more of the following items:
@@ -58,6 +61,7 @@ gR2(
 \item{p.val}{The p-value of the hypothesis test where the null hypothesis is that the population gR2 is equal to \code{gR2.pop} and the alternative hypothesis is that the population gR2 is not equal to, less than, or greater than \code{gR2.pop} depending on \code{alternative} (if \code{inference} is \code{TRUE}).}
 \item{K}{The number of lines in the unspecified scenario, either chosen by the user or chosen from \code{cand.Ks} by the \code{gR2} function.}
 \item{membership}{The inferred line membership of all the data points in the unspecified scenario.}
+\item{perLineInfo}{A matrix with three columns: lineIndex, R2, and pValue. Each row corresponds to a line. Total number of rows is \code{K}, the number of lines chosen.}
 }
 \description{
 \code{gR2} calculates the sample gR2 under the specified scenario, the unspecified scenario (K chosen), and the unspecified scenario (K not chosen). It also provides an option to perform statistical inference on the population gR2.
