@@ -20,8 +20,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // Klines_not_1Cpp
-Rcpp::List Klines_not_1Cpp(const arma::vec x, const arma::vec y, const int K, const int num_init, const std::string regressionMethod);
-RcppExport SEXP _gR2_Klines_not_1Cpp(SEXP xSEXP, SEXP ySEXP, SEXP KSEXP, SEXP num_initSEXP, SEXP regressionMethodSEXP) {
+Rcpp::List Klines_not_1Cpp(const arma::vec x, const arma::vec y, const int K, const int num_init, const std::string regressionMethod, const arma::vec genotypeVector, const double minRelativeGroupSize);
+RcppExport SEXP _gR2_Klines_not_1Cpp(SEXP xSEXP, SEXP ySEXP, SEXP KSEXP, SEXP num_initSEXP, SEXP regressionMethodSEXP, SEXP genotypeVectorSEXP, SEXP minRelativeGroupSizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -30,14 +30,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const int >::type K(KSEXP);
     Rcpp::traits::input_parameter< const int >::type num_init(num_initSEXP);
     Rcpp::traits::input_parameter< const std::string >::type regressionMethod(regressionMethodSEXP);
-    rcpp_result_gen = Rcpp::wrap(Klines_not_1Cpp(x, y, K, num_init, regressionMethod));
+    Rcpp::traits::input_parameter< const arma::vec >::type genotypeVector(genotypeVectorSEXP);
+    Rcpp::traits::input_parameter< const double >::type minRelativeGroupSize(minRelativeGroupSizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(Klines_not_1Cpp(x, y, K, num_init, regressionMethod, genotypeVector, minRelativeGroupSize));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gR2_Klines_1Cpp", (DL_FUNC) &_gR2_Klines_1Cpp, 3},
-    {"_gR2_Klines_not_1Cpp", (DL_FUNC) &_gR2_Klines_not_1Cpp, 5},
+    {"_gR2_Klines_not_1Cpp", (DL_FUNC) &_gR2_Klines_not_1Cpp, 7},
     {NULL, NULL, 0}
 };
 

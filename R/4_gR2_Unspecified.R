@@ -9,7 +9,7 @@
 gR2_Unspecified<-function(x,y,
                           K,cand.Ks,num_init,mc.cores,regressionMethod,verbose,
                           inference,conf.level,gR2.pop,alternative,method,
-                          details){
+                          details,genotypeVector,minRelativeGroupSize){
   #num_init (number of initializations)
   #num_init is 30 by default. However, when n is smaller than 50, num_init is set to be larger.
   n<-length(x)
@@ -21,13 +21,15 @@ gR2_Unspecified<-function(x,y,
   if(!is.null(K)){
     #If K is chosen, get membership.
     result<-Klines(x,y,
-                   K,num_init,mc.cores,regressionMethod)
+                   K,num_init,mc.cores,regressionMethod,
+                   genotypeVector,minRelativeGroupSize)
     membership<-result$membership
     #W<-result$W #Don't need to store W when K is chosen
   }else{
     #If K is not chosen, choose K and get membership (and print explanations along the way if verbose).
     result<-gR2_Unspecified_Choose_K(x,y,
-                                     cand.Ks,num_init,mc.cores,regressionMethod,verbose)
+                                     cand.Ks,num_init,mc.cores,regressionMethod,verbose,
+                                     genotypeVector,minRelativeGroupSize)
     K<-result$K
     membership<-result$membership
   }
@@ -51,14 +53,16 @@ gR2_Unspecified<-function(x,y,
 #Choose K
 #Returns a list of two items: chosen K and membership; prints explanations along the way if verbose
 gR2_Unspecified_Choose_K<-function(x,y,
-                                   cand.Ks,num_init,mc.cores,regressionMethod,verbose){
+                                   cand.Ks,num_init,mc.cores,regressionMethod,verbose,
+                                   genotypeVector,minRelativeGroupSize){
   #If verbose, print "Candidate K values: 1, 2, 3, 4" (by default)
   if(verbose) cat("Candidate K values: ",paste(cand.Ks,collapse=", "),"\n",sep="")
 
   #Run Klines on each candidate K
   results<-lapply(cand.Ks,FUN=function(cand.K){
     return(Klines(x,y,
-                  K=cand.K,num_init,mc.cores,regressionMethod))
+                  K=cand.K,num_init,mc.cores,regressionMethod,
+                  genotypeVector,minRelativeGroupSize))
   }) #A list of 4 lists (by default), each of length 2 (membership and W)
 
   #Get Ws

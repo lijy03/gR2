@@ -5,7 +5,7 @@ Klines_1Cpp <- function(x, y, regressionMethod) {
     .Call(`_gR2_Klines_1Cpp`, x, y, regressionMethod)
 }
 
-Klines_not_1Cpp <- function(x, y, K, num_init, regressionMethod) {
-    .Call(`_gR2_Klines_not_1Cpp`, x, y, K, num_init, regressionMethod)
+Klines_not_1Cpp <- function(x, y, K, num_init, regressionMethod, genotypeVector, minRelativeGroupSize) {
+    .Call(`_gR2_Klines_not_1Cpp`, x, y, K, num_init, regressionMethod, genotypeVector, minRelativeGroupSize)
 }
 

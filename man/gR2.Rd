@@ -19,7 +19,9 @@ gR2(
   gR2.pop = 0,
   alternative = "greater",
   method = "general",
-  details = FALSE
+  details = FALSE,
+  genotypeVector,
+  minRelativeGroupSize = 0.1
 )
 }
 \arguments{

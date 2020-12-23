@@ -8,11 +8,13 @@ struct Struct1{ //Return type of update100TimesCpp()
   //Fields
   arma::vec membership; //Vector of length n
   arma::mat matrixOfDistances; //n*K
+  bool conditionsSatisfied;
 
   //Constructors
   Struct1(){};
-  Struct1(arma::vec membership,arma::mat matrixOfDistances)
-    :membership(membership),matrixOfDistances(matrixOfDistances){}
+  Struct1(arma::vec membership,arma::mat matrixOfDistances,bool conditionsSatisfied)
+    :membership(membership),matrixOfDistances(matrixOfDistances),
+     conditionsSatisfied(conditionsSatisfied){}
 };
 
 struct Struct2{ //Return type of Klines_eachCpp()

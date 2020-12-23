@@ -46,7 +46,7 @@
 gR2<-function(x,y,z=NULL, #basic arguments
               K=NULL,cand.Ks=1:4,nstart=30,mc.cores=NULL,regressionMethod="MA",verbose=TRUE, #Arguments for unspecified scenario
               inference=FALSE,conf.level=0.95,gR2.pop=0,alternative="greater",method="general", #Arguments for inference
-              details=FALSE #Additional arguments
+              details=FALSE,genotypeVector,minRelativeGroupSize=0.1 #Additional arguments
               ){
 
   #Check inputs
@@ -55,6 +55,7 @@ gR2<-function(x,y,z=NULL, #basic arguments
     if(length(z)!=length(x)){stop("z must be of the same length as x and y.")}
     if(!is.null(K)){warning("Since z is not null, K will not be used.")}
   }
+  if(length(genotypeVector)!=length(x)){stop("genotypeVector must be of the same length as x and y.")}
 
   #Specified vs. unspecified
   if (!is.null(z)){
@@ -76,7 +77,7 @@ gR2<-function(x,y,z=NULL, #basic arguments
     toReturn<-gR2_Unspecified(x,y,
                               K,cand.Ks,num_init=nstart,mc.cores,regressionMethod,verbose,
                               inference,conf.level,gR2.pop,alternative,method,
-                              details)
+                              details,genotypeVector,minRelativeGroupSize)
     return(toReturn)
   }
 }

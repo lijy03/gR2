@@ -2,7 +2,8 @@
 #Returns a list of two items: membership and W
 #W will be used for plotting when choosing K.
 Klines<-function(x,y,
-                 K,num_init,mc.cores,regressionMethod){
+                 K,num_init,mc.cores,regressionMethod,
+                 genotypeVector,minRelativeGroupSize){
   if (K==1){
     result<-Klines_1Cpp(x,y,regressionMethod)
   }else{
@@ -12,7 +13,8 @@ Klines<-function(x,y,
       RcppParallel::setThreadOptions(numThreads=mc.cores)
     }
     result<-Klines_not_1Cpp(x,y,
-                            K,num_init,regressionMethod)
+                            K,num_init,regressionMethod,
+                            genotypeVector,minRelativeGroupSize)
 
   }
   result$membership<-as.integer(as.vector(result$membership)) #Convert n*1 matrix to vector of length n, and convert numbers to integers

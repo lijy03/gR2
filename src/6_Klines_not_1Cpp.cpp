@@ -15,6 +15,8 @@ struct KlinesEngine:public RcppParallel::Worker{
   const std::string regressionMethod;
   const uint64_t seed;
   const int n; //Useful for operator()
+  RcppParallel::RVector<double> genotypeVectorRM; //Vector of length n. Do not set as constant so that later can use as an arma object
+  const double minRelativeGroupSize;
 
   //Fields to be updated
   RcppParallel::RVector<double> WsRM; //Vector of length num_init
@@ -23,10 +25,12 @@ struct KlinesEngine:public RcppParallel::Worker{
   //Constructor
   KlinesEngine(const Rcpp::NumericVector xRcpp,const Rcpp::NumericVector yRcpp,
                const int K,const std::string regressionMethod,const uint64_t seed,
+               const Rcpp::NumericVector genotypeVectorRcpp,const double minRelativeGroupSize,
                Rcpp::NumericVector WsRcpp,Rcpp::NumericMatrix membershipsRcpp)
     :xRM(xRcpp),yRM(yRcpp),
      K(K),regressionMethod(regressionMethod),seed(seed),
      n(xRcpp.length()),
+     genotypeVectorRM(genotypeVectorRcpp),minRelativeGroupSize(minRelativeGroupSize),
      WsRM(WsRcpp),membershipsRM(membershipsRcpp){}
 
   void operator()(std::size_t begin,std::size_t end){
@@ -35,8 +39,10 @@ struct KlinesEngine:public RcppParallel::Worker{
     for(std::size_t initIndex=begin;initIndex<end;initIndex++){ //Set initIndex as std::size_t to avoid warning messages
       const vec x=vec(xRM.begin(),n,false); //false means that no copying will be done.
       const vec y=vec(yRM.begin(),n,false); //false means that no copying will be done.
+      const vec genotypeVector=vec(genotypeVectorRM.begin(),n,false); //false means that no copying will be done.
       Struct2 result=Klines_eachCpp(x,y,
-                                    K,regressionMethod,rng);
+                                    K,regressionMethod,rng,
+                                    genotypeVector,minRelativeGroupSize);
       WsRM[initIndex]=result.W;
       for (int obsIndex=0;obsIndex<n;obsIndex++){ //Fill the column in membershipsRM
         membershipsRM(obsIndex,initIndex)=result.membership(obsIndex);
@@ -50,11 +56,13 @@ struct KlinesEngine:public RcppParallel::Worker{
 //Returns a list of two items: membership and W
 //[[Rcpp::export]]
 Rcpp::List Klines_not_1Cpp(const arma::vec x,const arma::vec y,
-                           const int K,const int num_init,const std::string regressionMethod){
+                           const int K,const int num_init,const std::string regressionMethod,
+                           const arma::vec genotypeVector, const double minRelativeGroupSize){
   const int n=x.n_elem;
   //Store x and y in xRcpp and yRcpp, which is necessary for RcppParallel::Worker
   const Rcpp::NumericVector xRcpp=Rcpp::NumericVector(x.begin(),x.end()); //Vector of length n
   const Rcpp::NumericVector yRcpp=Rcpp::NumericVector(y.begin(),y.end()); //Vector of length n
+  const Rcpp::NumericVector genotypeVectorRcpp=Rcpp::NumericVector(genotypeVector.begin(),genotypeVector.end()); //Vector of length n
 
   //Generate a seed from R's RNG
   const uint64_t seed=dqrng::convert_seed<uint64_t>(Rcpp::IntegerVector(2,dqrng::R_random_int));
@@ -66,6 +74,7 @@ Rcpp::List Klines_not_1Cpp(const arma::vec x,const arma::vec y,
   //Construct KlinesEngine functor
   KlinesEngine klinesEngine(xRcpp,yRcpp,
                             K,regressionMethod,seed,
+                            genotypeVectorRcpp,minRelativeGroupSize,
                             WsRcpp,membershipsRcpp);
 
   //Fill WsRcpp and membershipsRcpp using RcppParallel
