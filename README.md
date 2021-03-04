@@ -1,14 +1,11 @@
----
-output: pdf_document
----
 
 ## Installation
 
-You can install gR2 from GitHub with:
+You can install this version of gR2 from GitHub with:
 
 ```{r,eval=FALSE}
 #install.packages("devtools")
-devtools::install_github("lijy03/gR2")
+devtools::install_github("lijy03/gR2",ref="noCVersion")
 ```
 
 ## Examples
