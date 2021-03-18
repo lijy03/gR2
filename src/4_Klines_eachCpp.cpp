@@ -56,17 +56,17 @@ struct Struct2 Klines_eachCpp(const arma::vec x,const arma::vec y,
   return toReturn;
 }
 
-// //[[Rcpp::export]]
-// Rcpp::List Klines_eachCppOut(const arma::vec x,const arma::vec y,
-//                              const int K,const std::string regressionMethod){
-//   const uint64_t seed=dqrng::convert_seed<uint64_t>(Rcpp::IntegerVector(2,dqrng::R_random_int));
-//   const dqrng::rng64_t rng=dqrng::generator<dqrng::xoroshiro128plus>(seed);
-//
-//   Struct2 result=Klines_eachCpp(x,y,K,regressionMethod,rng);
-//
-//   return Rcpp::List::create(
-//     Rcpp::Named("membership")=result.membership,
-//     Rcpp::Named("W")=result.W
-//   );
-// }
+//[[Rcpp::export]]
+Rcpp::List Klines_eachCppOut(const arma::vec x,const arma::vec y,
+                             const int K,const std::string regressionMethod){
+  const uint64_t seed=dqrng::convert_seed<uint64_t>(Rcpp::IntegerVector(2,dqrng::R_random_int));
+  const dqrng::rng64_t rng=dqrng::generator<dqrng::xoroshiro128plus>(seed);
+
+  Struct2 result=Klines_eachCpp(x,y,K,regressionMethod,rng);
+
+  return Rcpp::List::create(
+    Rcpp::Named("membership")=result.membership,
+    Rcpp::Named("W")=result.W
+  );
+}
 

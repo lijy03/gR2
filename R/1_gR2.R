@@ -16,7 +16,7 @@
 #' @param K Number of lines in the unspecified scenario. Default is \code{NULL}.
 #' @param cand.Ks A vector of positive integers that represents the candidate K’s in the unspecified scenario. Default is \code{1:4}.
 #' @param nstart Number of initializations for the K-lines algorithm in the unspecified scenario. Default is \code{30}.
-#' @param mc.cores Number of cores to use in the unspecified scenario. Default is \code{NULL}, which means all of the available cores are used.
+#' @param mc.cores Number of cores to use in the unspecified scenario. Default is the number of CPU cores minus one.
 #' @param regressionMethod Valid values are \code{‘MA’} and \code{‘LM’}. Indicates which regression method to use in the K-lines algorithm - major axis regression or linear regression. Default is \code{‘MA’}.
 #' @param verbose Logical. If \code{TRUE}, then messages are printed and a graph is produced in the unspecified scenario (K not chosen). Default is \code{TRUE}.
 #' @param inference Logical. If \code{TRUE}, then the function calculates a confidence interval for the population gR2 of confidence level \code{conf.level}, as well as a p-value of the hypothesis test where the null hypothesis is that the population gR2 is equal to \code{gR2.pop}. Default is \code{FALSE}.
@@ -44,7 +44,7 @@
 #' @export
 
 gR2<-function(x,y,z=NULL, #basic arguments
-              K=NULL,cand.Ks=1:4,nstart=30,mc.cores=NULL,regressionMethod="MA",verbose=TRUE, #Arguments for unspecified scenario
+              K=NULL,cand.Ks=1:4,nstart=30,mc.cores=parallel::detectCores()-1,regressionMethod="MA",verbose=TRUE, #Arguments for unspecified scenario
               inference=FALSE,conf.level=0.95,gR2.pop=0,alternative="greater",method="general", #Arguments for inference
               details=FALSE #Additional arguments
               ){

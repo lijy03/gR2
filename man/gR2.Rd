@@ -4,23 +4,11 @@
 \alias{gR2}
 \title{gR2}
 \usage{
-gR2(
-  x,
-  y,
-  z = NULL,
-  K = NULL,
-  cand.Ks = 1:4,
-  nstart = 30,
-  mc.cores = NULL,
-  regressionMethod = "MA",
-  verbose = TRUE,
-  inference = FALSE,
-  conf.level = 0.95,
-  gR2.pop = 0,
-  alternative = "greater",
-  method = "general",
-  details = FALSE
-)
+gR2(x, y, z = NULL, K = NULL, cand.Ks = 1:4, nstart = 30,
+  mc.cores = parallel::detectCores() - 1, regressionMethod = "MA",
+  verbose = TRUE, inference = FALSE, conf.level = 0.95,
+  gR2.pop = 0, alternative = "greater", method = "general",
+  details = FALSE)
 }
 \arguments{
 \item{x}{A numeric vector.}
@@ -35,7 +23,7 @@ gR2(
 
 \item{nstart}{Number of initializations for the K-lines algorithm in the unspecified scenario. Default is \code{30}.}
 
-\item{mc.cores}{Number of cores to use in the unspecified scenario. Default is \code{NULL}, which means all of the available cores are used.}
+\item{mc.cores}{Number of cores to use in the unspecified scenario. Default is the number of CPU cores minus one.}
 
 \item{regressionMethod}{Valid values are \code{‘MA’} and \code{‘LM’}. Indicates which regression method to use in the K-lines algorithm - major axis regression or linear regression. Default is \code{‘MA’}.}
 
