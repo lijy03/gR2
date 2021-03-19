@@ -1,29 +1,52 @@
 
 ## Installation
 
-If you are using Linux or Windows, you can install gR2 from GitHub with:
+We recommend that users install this package on Linux. If Windows or
+macOS is used, you may run into compilation errors when trying to
+install the main branch of the package, due to issues that are
+introduced with operating system updates.
+
+To address potential compilation issues, we provide three branches of
+the package with increasing ease of installation but decreasing
+computational efficiency:
+
+1.  **Main branch**, which uses both Rcpp and RcppParallel (fastest).
+2.  A branch named **RcppVersion**, which only uses Rcpp (about 10x
+    slower).
+3.  A branch named **RVersion**, which uses neither Rcpp nor
+    RcppParallel (slowest).
+
+You may follow these steps to install the package:
 
 ``` r
-#install.packages("devtools")
+# install.packages("devtools")
+
+#Step 1. Try installing the main branch:
 devtools::install_github("lijy03/gR2")
+
+#Step 2. If Step 1 fails, try installing the branch named RcppVersion:
+devtools::install_github("lijy03/gR2",ref="RcppVersion")
+
+#Step 3. If Step 2 also fails, try installing the branch named RVersion:
+devtools::install_github("lijy03/gR2",ref="RVersion")
 ```
 
-If you are using macOS, you may encounter this error when trying to
-install gR2 with the above command:
+One known issue is that at Step 1, if you are using macOS, you may
+encounter this error: *clang: error: unsupported option ‘-fopenmp’*
 
-clang: error: unsupported option ‘-fopenmp’
-
-To resolve this issue, you can follow the instructions found
-here:
-
+To resolve this issue, you may follow the instructions found here
 <https://thecoatlessprofessor.com/programming/cpp/r-compiler-tools-for-rcpp-on-macos/>,
-or
+or here <https://github.com/rmacoslib/r-macos-rtools>. Basically, what
+you would do is download an macOS package (r-macos-rtools) and install
+it. Then you may try Step 1 again.
 
-<https://github.com/rmacoslib/r-macos-rtools>.
+We summarize the key differences between the three branches here:
 
-Basically, what you need to do is download an macOS package
-(r-macos-rtools) and install it. Then, you should be able to install gR2
-with devtools::install\_github().
+| Branch      | Speed            | Needs compilation | Klines algorithm implemented in | Parallelization mechanism | To ensure reproducibility                       | Special note for Windows users |
+| ----------- | ---------------- | ----------------- | ------------------------------- | ------------------------- | ----------------------------------------------- | ------------------------------ |
+| Main        | Fastest          | Yes               | Rcpp                            | RcppParallel              | set.seed()                                      |                                |
+| RcppVersion | About 10x slower | Yes               | Rcpp                            | mclapply()                | RNGkind(“L’Ecuyer-CMRG”) followed by set.seed() | Use mc.cores=1 to avoid error. |
+| RVersion    | Slowest          | No                | R                               | mclapply()                | RNGkind(“L’Ecuyer-CMRG”) followed by set.seed() | Use mc.cores=1 to avoid error. |
 
 ## Examples
 
@@ -58,6 +81,7 @@ z<-data[,3]
 ``` r
 library(gR2)
 
+# RNGkind("L'Ecuyer-CMRG") #This is only needed if either RcppVersion or RVersion is used.
 set.seed(11) #Use set.seed() to make gR2 reproducible in the unspecified scenario
 
 #Specified scenario
@@ -74,10 +98,9 @@ result<-gR2(x,y,inference=TRUE) #Inference
 ```
 
     ## Candidate K values: 1, 2, 3, 4
+    ## The K value chosen by AIC is 2.
 
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
-
-    ## The K value chosen by AIC is 2.
 
 ### A more comprehensive list of uses of gR2():
 
