@@ -9,10 +9,5 @@ License: GPL-2
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
-LinkingTo:
-  Rcpp, RcppArmadillo, RcppParallel,
-  dqrng, BH, sitmo
-Imports:
-  Rcpp, RcppParallel,
-  parallel, mvtnorm
+Imports: lmodel2, parallel, mvtnorm
 SystemRequirements: GNU make

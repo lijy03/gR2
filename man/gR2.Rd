@@ -4,11 +4,23 @@
 \alias{gR2}
 \title{gR2}
 \usage{
-gR2(x, y, z = NULL, K = NULL, cand.Ks = 1:4, nstart = 30,
-  mc.cores = parallel::detectCores() - 1, regressionMethod = "MA",
-  verbose = TRUE, inference = FALSE, conf.level = 0.95,
-  gR2.pop = 0, alternative = "greater", method = "general",
-  details = FALSE)
+gR2(
+  x,
+  y,
+  z = NULL,
+  K = NULL,
+  cand.Ks = 1:4,
+  nstart = 30,
+  mc.cores = parallel::detectCores() - 1,
+  regressionMethod = "MA",
+  verbose = TRUE,
+  inference = FALSE,
+  conf.level = 0.95,
+  gR2.pop = 0,
+  alternative = "greater",
+  method = "general",
+  details = FALSE
+)
 }
 \arguments{
 \item{x}{A numeric vector.}
