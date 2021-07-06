@@ -46,7 +46,8 @@
 gR2<-function(x,y,z=NULL, #basic arguments
               K=NULL,cand.Ks=1:4,nstart=30,mc.cores=NULL,regressionMethod="MA",verbose=TRUE, #Arguments for unspecified scenario
               inference=FALSE,conf.level=0.95,gR2.pop=0,alternative="greater",method="general", #Arguments for inference
-              details=FALSE,genotypeVector,minRelativeGroupSize=0.1 #Additional arguments
+              details=FALSE,
+              genotypeVector,minRelativeGroupSize=0.05,mod.sel=c("AIC","AICc","BIC") #Additional arguments
               ){
 
   #Check inputs
@@ -77,7 +78,8 @@ gR2<-function(x,y,z=NULL, #basic arguments
     toReturn<-gR2_Unspecified(x,y,
                               K,cand.Ks,num_init=nstart,mc.cores,regressionMethod,verbose,
                               inference,conf.level,gR2.pop,alternative,method,
-                              details,genotypeVector,minRelativeGroupSize)
+                              details,
+                              genotypeVector,minRelativeGroupSize,mod.sel)
     return(toReturn)
   }
 }

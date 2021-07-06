@@ -21,7 +21,8 @@ gR2(
   method = "general",
   details = FALSE,
   genotypeVector,
-  minRelativeGroupSize = 0.1
+  minRelativeGroupSize = 0.05,
+  mod.sel = c("AIC", "AICc", "BIC")
 )
 }
 \arguments{

@@ -45,15 +45,17 @@ struct Struct1 update200TimesCpp(const arma::vec x,const arma::vec y,
       break;
     }
 
-    //Check that every line contains at least one data point from each genotype and
-    //every line contains at least minRelativeGroupSize (default is 10%) of all people.
+    //Check that every line-genotype combination contains
+    //at least minRelativeGroupSize (default is 5%) of all people.
     for(int k=1;k<=K;k++){
       vec genotypeVectorSubgroup=genotypeVector(find(membership==k)); //Genotype vector for people in the kth line, length<=n.
       int numOfPeopleWithGenotype0=size(find(genotypeVectorSubgroup==0))[0]; //find() returns a vector of indices; size() returns a vector.
       int numOfPeopleWithGenotype1=size(find(genotypeVectorSubgroup==1))[0];
       int numOfPeopleWithGenotype2=size(find(genotypeVectorSubgroup==2))[0];
-      int numOfPeople=size(genotypeVectorSubgroup)[0];
-      if(numOfPeopleWithGenotype0<1||numOfPeopleWithGenotype1<1||numOfPeopleWithGenotype2<1||numOfPeople<minRelativeGroupSize*n){
+      //int numOfPeople=size(genotypeVectorSubgroup)[0];
+      if(numOfPeopleWithGenotype0<minRelativeGroupSize*n
+         ||numOfPeopleWithGenotype1<minRelativeGroupSize*n
+         ||numOfPeopleWithGenotype2<minRelativeGroupSize*n){
         conditionsSatisfied=false;
         break;
       }
